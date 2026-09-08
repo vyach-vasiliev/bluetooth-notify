@@ -1,0 +1,217 @@
+using System.Collections.ObjectModel;
+using System.Windows.Threading;
+using BluetoothNotify.App.Infrastructure;
+using BluetoothNotify.App.Models;
+using BluetoothNotify.App.Services;
+
+namespace BluetoothNotify.App.ViewModels;
+
+public sealed record PreferenceOption<T>(T Value, string Label);
+
+public sealed class PreferencesChangedEventArgs(AppLanguagePreference language, AppThemePreference theme) : EventArgs
+{
+    public AppLanguagePreference Language { get; } = language;
+    public AppThemePreference Theme { get; } = theme;
+}
+
+public sealed class TrayPanelViewModel : ObservableObject
+{
+    private readonly IBluetoothDeviceMonitor _monitor;
+    private readonly ISettingsStore _settingsStore;
+    private readonly IDeviceIconResolver _icons;
+    private readonly Dispatcher _dispatcher;
+    private readonly AsyncRefreshGate _refreshGate = new();
+    private readonly RelayCommand _exitCommand;
+    private readonly RelayCommand _openSettingsCommand;
+    private readonly RelayCommand _closeSettingsCommand;
+    private readonly SemaphoreSlim _settingsSaveGate = new(1, 1);
+    private bool _isBusy;
+    private bool _isBluetoothAvailable = true;
+    private string? _warning;
+    private DateTimeOffset? _updatedAt;
+    private bool _notificationsEnabled = true;
+    private bool _isSettingsOpen;
+    private AppLanguagePreference _languagePreference;
+    private AppThemePreference _themePreference;
+
+    public TrayPanelViewModel(IBluetoothDeviceMonitor monitor, ISettingsStore settingsStore, IDeviceIconResolver icons, Dispatcher dispatcher)
+    {
+        _monitor = monitor;
+        _settingsStore = settingsStore;
+        _icons = icons;
+        _dispatcher = dispatcher;
+        RefreshCommand = new AsyncCommand(() => RefreshAsync(true, false));
+        ToggleNotificationsCommand = new AsyncCommand(ToggleNotificationsAsync);
+        _exitCommand = new RelayCommand(() => ExitRequested?.Invoke(this, EventArgs.Empty));
+        _openSettingsCommand = new RelayCommand(OpenSettings);
+        _closeSettingsCommand = new RelayCommand(CloseSettings);
+    }
+
+    public ObservableCollection<BluetoothDeviceViewModel> Devices { get; } = [];
+    public AsyncCommand RefreshCommand { get; }
+    public AsyncCommand ToggleNotificationsCommand { get; }
+    public event EventHandler? ExitRequested;
+    public event EventHandler<PreferencesChangedEventArgs>? PreferencesChanged;
+    public RelayCommand ExitCommand => _exitCommand;
+    public RelayCommand OpenSettingsCommand => _openSettingsCommand;
+    public RelayCommand CloseSettingsCommand => _closeSettingsCommand;
+
+    public bool IsBusy { get => _isBusy; private set => SetProperty(ref _isBusy, value); }
+    public bool IsBluetoothAvailable { get => _isBluetoothAvailable; private set { if (SetProperty(ref _isBluetoothAvailable, value)) OnPropertyChanged(nameof(ShowEmptyState)); } }
+    public string? Warning { get => _warning; private set { if (SetProperty(ref _warning, value)) OnPropertyChanged(nameof(HasWarning)); } }
+    public bool HasWarning => !string.IsNullOrWhiteSpace(Warning);
+    public bool ShowEmptyState => IsBluetoothAvailable && Devices.Count == 0;
+    public bool NotificationsEnabled
+    {
+        get => _notificationsEnabled;
+        private set
+        {
+            if (!SetProperty(ref _notificationsEnabled, value)) return;
+            OnPropertyChanged(nameof(NotificationsText));
+            OnPropertyChanged(nameof(NotificationsIconGlyph));
+        }
+    }
+    public string NotificationsText => NotificationsEnabled ? Properties.Strings.NotificationsEnabled : Properties.Strings.Notifications;
+    public string NotificationsIconGlyph => GetNotificationsIconGlyph(NotificationsEnabled);
+    public string BatterySummary => string.Format(Properties.Strings.DevicesWithBattery, Devices.Count(x => x.HasBattery));
+    public string UpdatedText => _updatedAt is { } at ? string.Format(Properties.Strings.Updated, at) : Properties.Strings.Loading;
+
+    public static string GetNotificationsIconGlyph(bool enabled) => enabled ? "\uF2A3" : "\uF285";
+
+    public bool IsSettingsOpen { get => _isSettingsOpen; private set => SetProperty(ref _isSettingsOpen, value); }
+    public AppLanguagePreference LanguagePreference
+    {
+        get => _languagePreference;
+        set
+        {
+            if (!SetProperty(ref _languagePreference, value)) return;
+            _ = PersistPreferencesAsync();
+        }
+    }
+    public AppThemePreference ThemePreference
+    {
+        get => _themePreference;
+        set
+        {
+            if (!SetProperty(ref _themePreference, value)) return;
+            _ = PersistPreferencesAsync();
+        }
+    }
+    public IReadOnlyList<PreferenceOption<AppLanguagePreference>> LanguageOptions =>
+    [
+        new(AppLanguagePreference.System, Properties.Strings.SystemDefault),
+        new(AppLanguagePreference.EnglishUnitedStates, Properties.Strings.EnglishUnitedStates),
+        new(AppLanguagePreference.Russian, Properties.Strings.Russian)
+    ];
+    public IReadOnlyList<PreferenceOption<AppThemePreference>> ThemeOptions =>
+    [
+        new(AppThemePreference.System, Properties.Strings.SystemDefault),
+        new(AppThemePreference.Light, Properties.Strings.LightTheme),
+        new(AppThemePreference.Dark, Properties.Strings.DarkTheme)
+    ];
+
+    public void OpenSettings() => IsSettingsOpen = true;
+    public void CloseSettings() => IsSettingsOpen = false;
+
+    public void Initialize(AppSettings settings)
+    {
+        _notificationsEnabled = settings.NotificationsEnabled;
+        _languagePreference = settings.Language;
+        _themePreference = settings.Theme;
+        OnPropertyChanged(nameof(NotificationsEnabled));
+        OnPropertyChanged(nameof(NotificationsText));
+        OnPropertyChanged(nameof(NotificationsIconGlyph));
+        OnPropertyChanged(nameof(LanguagePreference));
+        OnPropertyChanged(nameof(ThemePreference));
+    }
+
+    public async Task InitializeAsync(CancellationToken cancellationToken)
+    {
+        var settings = await _settingsStore.LoadAsync(cancellationToken).ConfigureAwait(false);
+        await _dispatcher.InvokeAsync(() => Initialize(settings));
+    }
+
+    public async Task RefreshAsync(bool forceBatteryRead, bool skipIfBusy, CancellationToken cancellationToken = default)
+    {
+        await _refreshGate.RunAsync(async token =>
+        {
+            await _dispatcher.InvokeAsync(() => IsBusy = true);
+            try
+            {
+                var snapshot = await _monitor.RefreshAsync(forceBatteryRead, token).ConfigureAwait(false);
+                await _dispatcher.InvokeAsync(() => Apply(snapshot));
+            }
+            catch (OperationCanceledException) when (token.IsCancellationRequested) { }
+            catch
+            {
+                await _dispatcher.InvokeAsync(() => Warning = Properties.Strings.PartialRefreshWarning);
+            }
+            finally { await _dispatcher.InvokeAsync(() => IsBusy = false); }
+        }, skipIfBusy, cancellationToken).ConfigureAwait(false);
+    }
+
+    private void Apply(MonitorSnapshot snapshot)
+    {
+        var existing = Devices.ToDictionary(x => x.StableId, StringComparer.OrdinalIgnoreCase);
+        var ordered = new List<BluetoothDeviceViewModel>();
+        foreach (var state in snapshot.Devices)
+        {
+            if (existing.TryGetValue(state.StableId, out var viewModel)) viewModel.Update(state);
+            else viewModel = new BluetoothDeviceViewModel(state, _icons);
+            ordered.Add(viewModel);
+        }
+        Devices.Clear();
+        foreach (var item in ordered) Devices.Add(item);
+        IsBluetoothAvailable = snapshot.IsBluetoothAvailable;
+        Warning = snapshot.Warning;
+        _updatedAt = snapshot.CompletedAt;
+        OnPropertyChanged(nameof(UpdatedText));
+        OnPropertyChanged(nameof(BatterySummary));
+        OnPropertyChanged(nameof(ShowEmptyState));
+    }
+
+    private async Task ToggleNotificationsAsync()
+    {
+        var previous = NotificationsEnabled;
+        NotificationsEnabled = !previous;
+        try { await SaveCurrentSettingsAsync().ConfigureAwait(false); }
+        catch
+        {
+            await _dispatcher.InvokeAsync(() =>
+            {
+                NotificationsEnabled = previous;
+                Warning = Properties.Strings.PartialRefreshWarning;
+            });
+        }
+    }
+
+    private async Task PersistPreferencesAsync()
+    {
+        try
+        {
+            await SaveCurrentSettingsAsync().ConfigureAwait(false);
+            await _dispatcher.InvokeAsync(() =>
+                PreferencesChanged?.Invoke(this, new PreferencesChangedEventArgs(LanguagePreference, ThemePreference)));
+        }
+        catch
+        {
+            await _dispatcher.InvokeAsync(() => Warning = Properties.Strings.PartialRefreshWarning);
+        }
+    }
+
+    private async Task SaveCurrentSettingsAsync()
+    {
+        await _settingsSaveGate.WaitAsync().ConfigureAwait(false);
+        try
+        {
+            var settings = await _dispatcher.InvokeAsync(() => new AppSettings
+            {
+                NotificationsEnabled = NotificationsEnabled,
+                Language = LanguagePreference,
+                Theme = ThemePreference
+            });
+            await _settingsStore.SaveAsync(settings).ConfigureAwait(false);
+        }
+        finally { _settingsSaveGate.Release(); }
+    }
+}

@@ -1,0 +1,179 @@
+<Window x:Class="BluetoothNotify.App.Views.TrayPanelWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:BluetoothNotify.App.ViewModels"
+        xmlns:controls="clr-namespace:BluetoothNotify.App.Controls"
+        xmlns:p="clr-namespace:BluetoothNotify.App.Properties"
+        Title="{x:Static p:Strings.AppTitle}"
+        Width="448" MaxHeight="620" SizeToContent="Height"
+        WindowStyle="None" ResizeMode="NoResize" ShowInTaskbar="False"
+        Background="{DynamicResource Window.Background}" Topmost="True"
+        Foreground="{DynamicResource Text.Primary}"
+        UseLayoutRounding="True" SnapsToDevicePixels="True">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+        <Style x:Key="CardItem" TargetType="ListBoxItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="Template">
+                <Setter.Value><ControlTemplate TargetType="ListBoxItem"><ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" /></ControlTemplate></Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <!-- DWM clips and rounds the real window. A second rounded WPF border here produced
+         the visible duplicate curve at the outer corners, especially in the light theme. -->
+    <Border BorderThickness="0" CornerRadius="0" Background="{DynamicResource Window.Background}">
+        <Grid>
+            <Grid x:Name="MainPage">
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Visible" />
+                        <Style.Triggers><DataTrigger Binding="{Binding IsSettingsOpen}" Value="True"><Setter Property="Visibility" Value="Collapsed" /></DataTrigger></Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Margin="20,18,16,14">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                    <Border Width="44" Height="44" CornerRadius="12" Background="{DynamicResource Logo.Background}" Margin="0,0,12,0">
+                        <TextBlock Text="&#xE702;" FontFamily="Segoe Fluent Icons" FontSize="22" Foreground="{DynamicResource Accent.Brush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="{x:Static p:Strings.AppTitle}" FontFamily="Segoe UI Variable Display, Segoe UI" FontWeight="SemiBold" FontSize="17" />
+                        <TextBlock Text="{x:Static p:Strings.Subtitle}" Foreground="{DynamicResource Text.Secondary}" FontSize="12" Margin="0,3,0,0" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                    <Button Grid.Column="2" Style="{StaticResource IconButton}" Command="{Binding RefreshCommand}" ToolTip="{x:Static p:Strings.Refresh}" AutomationProperties.Name="{x:Static p:Strings.Refresh}">
+                        <TextBlock Text="&#xE72C;" FontFamily="Segoe Fluent Icons" FontSize="17" />
+                    </Button>
+                </Grid>
+
+                <Grid Grid.Row="1" Margin="20,10,20,12">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding BatterySummary}" Foreground="{DynamicResource Text.Secondary}" FontSize="12" />
+                        <TextBlock Text="  ●" Foreground="{DynamicResource Battery.Low}" FontSize="10" ToolTip="{Binding Warning}" Visibility="{Binding HasWarning, Converter={StaticResource BoolToVisibility}}" />
+                    </StackPanel>
+                    <TextBlock Grid.Column="1" Text="{Binding UpdatedText}" Foreground="{DynamicResource Text.Secondary}" FontSize="12" FontFamily="Cascadia Mono, Consolas" />
+                </Grid>
+
+                <Grid Grid.Row="2" Margin="12,0">
+                    <ListBox ItemsSource="{Binding Devices}" ItemContainerStyle="{StaticResource CardItem}" Background="Transparent" BorderThickness="0" MaxHeight="203"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="False">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:BluetoothDeviceViewModel}">
+                                <Border Background="{DynamicResource Surface.Background}" CornerRadius="14" Padding="14" BorderBrush="{DynamicResource Card.Border}" BorderThickness="1">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="42" /><ColumnDefinition Width="*" /><ColumnDefinition Width="40" /></Grid.ColumnDefinitions>
+                                        <Border Width="36" Height="36" CornerRadius="10" Background="{DynamicResource Icon.Background}" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                            <TextBlock Text="{Binding IconGlyph}" FontFamily="Segoe Fluent Icons" FontSize="17" Foreground="{DynamicResource Text.Secondary}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Border>
+                                        <StackPanel Grid.Column="1" Margin="4,0,10,0">
+                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14" TextTrimming="CharacterEllipsis" />
+                                            <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
+                                                <TextBlock Text="{Binding ConnectionText}" Foreground="{DynamicResource Text.Secondary}" FontSize="12" />
+                                                <TextBlock Text="  ·  " Foreground="{DynamicResource Text.Secondary}" FontSize="12" />
+                                                <TextBlock Text="{Binding TransportText}" Foreground="{DynamicResource Text.Secondary}" FontSize="12" />
+                                            </StackPanel>
+                                            <Grid Margin="0,11,0,0">
+                                                <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="44" /></Grid.ColumnDefinitions>
+                                                <Border Height="4" CornerRadius="2" Background="{DynamicResource Battery.Track}" VerticalAlignment="Center" ToolTip="{Binding BatteryDescription}" Visibility="{Binding HasBattery, Converter={StaticResource BoolToVisibility}}">
+                                                    <Grid ClipToBounds="True">
+                                                        <ProgressBar Minimum="0" Maximum="100" Value="{Binding BatteryBarValue, Mode=OneWay}" Foreground="{Binding BatteryBrush, Mode=OneWay}" Background="Transparent" BorderThickness="0" />
+                                                    </Grid>
+                                                </Border>
+                                                <TextBlock Grid.Column="1" Text="{Binding BatteryText}" Foreground="{Binding BatteryBrush}" HorizontalAlignment="Right" FontFamily="Cascadia Mono, Consolas" FontWeight="SemiBold" FontSize="12" ToolTip="{Binding BatteryDescription}" />
+                                            </Grid>
+                                        </StackPanel>
+                                        <controls:ConnectionStatusIndicator Grid.Column="2" Width="32" Height="32" VerticalAlignment="Center" Focusable="False"
+                                              DeviceName="{Binding Name}" IsConnectedState="{Binding IsConnected}">
+                                            <Ellipse Width="22" Height="22" Fill="{DynamicResource Status.Inactive}" Stroke="{DynamicResource Border.Brush}" StrokeThickness="1" />
+                                            <Ellipse Width="22" Height="22" Fill="{DynamicResource Battery.Normal}" Visibility="{Binding IsConnected, Converter={StaticResource BoolToVisibility}}" />
+                                            <TextBlock Text="&#xE73E;" FontFamily="Segoe Fluent Icons" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource Status.Check}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsConnected, Converter={StaticResource BoolToVisibility}}" />
+                                        </controls:ConnectionStatusIndicator>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="28" Visibility="{Binding ShowEmptyState, Converter={StaticResource BoolToVisibility}}">
+                        <TextBlock Text="&#xE702;" FontFamily="Segoe Fluent Icons" FontSize="28" Foreground="{DynamicResource Text.Secondary}" HorizontalAlignment="Center" />
+                        <TextBlock Text="{x:Static p:Strings.NoDevices}" Foreground="{DynamicResource Text.Secondary}" TextAlignment="Center" TextWrapping="Wrap" Margin="0,10,0,14" />
+                        <Button Style="{StaticResource TextButton}" Command="{Binding RefreshCommand}" Content="{x:Static p:Strings.Refresh}" />
+                    </StackPanel>
+
+                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{DynamicResource Window.Background}">
+                        <Grid.Style><Style TargetType="Grid"><Setter Property="Visibility" Value="Collapsed" /><Style.Triggers><DataTrigger Binding="{Binding IsBluetoothAvailable}" Value="False"><Setter Property="Visibility" Value="Visible" /></DataTrigger></Style.Triggers></Style></Grid.Style>
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="28">
+                            <TextBlock Text="&#xE7BA;" FontFamily="Segoe Fluent Icons" FontSize="28" Foreground="{DynamicResource Text.Secondary}" HorizontalAlignment="Center" />
+                            <TextBlock Text="{x:Static p:Strings.BluetoothUnavailable}" Foreground="{DynamicResource Text.Secondary}" TextAlignment="Center" Margin="0,10,0,0" />
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+
+                <Grid Grid.Row="3" Margin="16,10,16,14">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                    <Button Style="{StaticResource TextButton}" HorizontalAlignment="Left" Command="{Binding ToggleNotificationsCommand}" AutomationProperties.Name="{Binding NotificationsText}">
+                        <StackPanel Orientation="Horizontal"><TextBlock Text="{Binding NotificationsIconGlyph}" FontFamily="Segoe Fluent Icons" FontSize="16" Margin="0,0,8,0" /><TextBlock Text="{Binding NotificationsText}" /></StackPanel>
+                    </Button>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <Button Style="{StaticResource TextButton}" Command="{Binding OpenSettingsCommand}" ToolTip="{x:Static p:Strings.Settings}" AutomationProperties.Name="{x:Static p:Strings.Settings}" Margin="0,0,4,0">
+                            <StackPanel Orientation="Horizontal"><TextBlock Text="&#xE713;" FontFamily="Segoe Fluent Icons" FontSize="15" Margin="0,0,7,0" /><TextBlock Text="{x:Static p:Strings.Settings}" /></StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource TextButton}" Command="{Binding ExitCommand}" Content="{x:Static p:Strings.Exit}" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+
+            <Grid x:Name="SettingsPage">
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers><DataTrigger Binding="{Binding IsSettingsOpen}" Value="True"><Setter Property="Visibility" Value="Visible" /></DataTrigger></Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+
+                <Grid Margin="16,16,20,14">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                    <Button Style="{StaticResource IconButton}" Command="{Binding CloseSettingsCommand}" ToolTip="{x:Static p:Strings.Back}" AutomationProperties.Name="{x:Static p:Strings.Back}" Margin="0,0,8,0">
+                        <TextBlock Text="&#xE72B;" FontFamily="Segoe Fluent Icons" FontSize="17" />
+                    </Button>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="{x:Static p:Strings.Settings}" FontFamily="Segoe UI Variable Display, Segoe UI" FontWeight="SemiBold" FontSize="17" />
+                        <TextBlock Text="{x:Static p:Strings.SettingsDescription}" Foreground="{DynamicResource Text.Secondary}" FontSize="12" Margin="0,3,0,0" />
+                    </StackPanel>
+                </Grid>
+
+                <StackPanel Grid.Row="1" Margin="16,4,16,18">
+                    <Border Background="{DynamicResource Surface.Background}" BorderBrush="{DynamicResource Card.Border}" BorderThickness="1" CornerRadius="14" Padding="16">
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static p:Strings.Language}" FontWeight="SemiBold" VerticalAlignment="Center" />
+                            <ComboBox Grid.Column="1" Style="{StaticResource SettingsComboBox}" ItemsSource="{Binding LanguageOptions}" DisplayMemberPath="Label" SelectedValuePath="Value"
+                                      SelectedValue="{Binding LanguagePreference, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{x:Static p:Strings.Language}" />
+                        </Grid>
+                    </Border>
+                    <Border Background="{DynamicResource Surface.Background}" BorderBrush="{DynamicResource Card.Border}" BorderThickness="1" CornerRadius="14" Padding="16" Margin="0,10,0,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static p:Strings.Theme}" FontWeight="SemiBold" VerticalAlignment="Center" />
+                            <ComboBox Grid.Column="1" Style="{StaticResource SettingsComboBox}" ItemsSource="{Binding ThemeOptions}" DisplayMemberPath="Label" SelectedValuePath="Value"
+                                      SelectedValue="{Binding ThemePreference, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{x:Static p:Strings.Theme}" />
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>
