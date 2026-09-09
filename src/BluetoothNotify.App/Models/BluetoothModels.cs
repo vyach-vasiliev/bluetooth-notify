@@ -16,6 +16,25 @@ public enum DeviceDataState
     Error
 }
 
+public enum BatteryLevelCategory
+{
+    Unknown,
+    Critical,
+    Low,
+    Normal
+}
+
+public static class BatteryLevelClassifier
+{
+    public static BatteryLevelCategory GetCategory(int? percent) => percent switch
+    {
+        null => BatteryLevelCategory.Unknown,
+        <= 15 => BatteryLevelCategory.Critical,
+        <= 29 => BatteryLevelCategory.Low,
+        _ => BatteryLevelCategory.Normal
+    };
+}
+
 public enum BluetoothDeviceKind
 {
     Unknown,

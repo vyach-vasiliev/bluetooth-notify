@@ -7,7 +7,8 @@ Add-Type -AssemblyName System.Drawing
 function Write-BluetoothIcon {
     param(
         [string]$OutputPath,
-        [System.Drawing.Color]$ForegroundColor
+        [System.Drawing.Color]$ForegroundColor,
+        [string]$PngOutputPath
     )
 
     $size = 64
@@ -24,6 +25,10 @@ function Write-BluetoothIcon {
     $format.LineAlignment = [System.Drawing.StringAlignment]::Center
 
     $graphics.DrawString([char]0xE702, $font, $foreground, [System.Drawing.RectangleF]::new(0, -2, $size, $size + 4), $format)
+
+    if ($PngOutputPath) {
+        $bitmap.Save($PngOutputPath, [System.Drawing.Imaging.ImageFormat]::Png)
+    }
 
     $pngStream = [System.IO.MemoryStream]::new()
     $bitmap.Save($pngStream, [System.Drawing.Imaging.ImageFormat]::Png)
@@ -58,14 +63,16 @@ function Write-BluetoothIcon {
 $darkPath = Join-Path $OutputDirectory 'BluetoothNotify.Dark.ico'
 $lightPath = Join-Path $OutputDirectory 'BluetoothNotify.Light.ico'
 $defaultPath = Join-Path $OutputDirectory 'BluetoothNotify.ico'
+$notificationPath = Join-Path $OutputDirectory 'BluetoothNotify.Notification.png'
 
 $darkForeground = [System.Drawing.Color]::FromArgb(255, 76, 147, 255)
 $lightForeground = [System.Drawing.Color]::FromArgb(255, 16, 82, 166)
 
-Write-BluetoothIcon $darkPath $darkForeground
-Write-BluetoothIcon $lightPath $lightForeground
+Write-BluetoothIcon $darkPath $darkForeground $null
+Write-BluetoothIcon $lightPath $lightForeground $notificationPath
 Copy-Item -LiteralPath $lightPath -Destination $defaultPath -Force
 
 Write-Output $darkPath
 Write-Output $lightPath
 Write-Output $defaultPath
+Write-Output $notificationPath

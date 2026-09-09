@@ -49,6 +49,7 @@ public interface ITrayIconService : IDisposable
     event EventHandler? PointerLeft;
     NativeRect GetIconRect();
     void Initialize();
+    void SetBatteryStatus(int? minimumBatteryPercent);
     void SetPanelBounds(NativeRect? bounds);
     void SetThemePreference(AppThemePreference preference);
 }

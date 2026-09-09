@@ -6,8 +6,6 @@ using BluetoothNotify.App.Services;
 
 namespace BluetoothNotify.App.ViewModels;
 
-public enum BatteryColorCategory { Unknown, Critical, Low, Normal }
-
 public sealed class BluetoothDeviceViewModel : ObservableObject
 {
     private BluetoothDeviceState _state;
@@ -37,16 +35,8 @@ public sealed class BluetoothDeviceViewModel : ObservableObject
     public bool HasBattery => BatteryPercent is not null;
     public bool IsStale => _state.DataState == DeviceDataState.Stale;
     public string AutomationName => string.Format(Properties.Strings.StatusAutomationName, Name);
-    public BatteryColorCategory BatteryCategory => IsConnected ? GetBatteryCategory(BatteryPercent) : BatteryColorCategory.Unknown;
+    public BatteryLevelCategory BatteryCategory => IsConnected ? BatteryLevelClassifier.GetCategory(BatteryPercent) : BatteryLevelCategory.Unknown;
     public Brush BatteryBrush => (Brush)(Application.Current?.TryFindResource($"Battery.{BatteryCategory}") ?? Brushes.Gray);
-
-    public static BatteryColorCategory GetBatteryCategory(int? percent) => percent switch
-    {
-        null => BatteryColorCategory.Unknown,
-        <= 15 => BatteryColorCategory.Critical,
-        <= 29 => BatteryColorCategory.Low,
-        _ => BatteryColorCategory.Normal
-    };
 
     public void Update(BluetoothDeviceState state)
     {

@@ -24,6 +24,7 @@ public partial class App : Application
     private TrayPanelViewModel? _viewModel;
     private TrayPanelWindow? _window;
     private CancellationTokenSource? _polling;
+    private CancellationTokenSource? _invalidationRefresh;
     private bool _exiting;
     private bool _panelPinned;
     private bool _panelWasActivated;
@@ -69,10 +70,13 @@ public partial class App : Application
             _viewModel.Initialize(initialSettings);
             _viewModel.ExitRequested += (_, _) => ExitApplication();
             _viewModel.PreferencesChanged += OnPreferencesChanged;
+            _viewModel.BatteryStatusChanged += (_, args) => _tray?.SetBatteryStatus(args.MinimumBatteryPercent);
             _window = CreatePanelWindow();
 
             _monitor.ConnectionChanged += OnConnectionChanged;
+            _monitor.DevicesInvalidated += OnDevicesInvalidated;
             await _monitor.StartAsync(_lifetime.Token);
+            await SafeRefreshAsync(false, false, _lifetime.Token);
             _singleInstance.StartServer(() => Dispatcher.BeginInvoke(() =>
             {
                 _logger.Info("Show command received from another instance.");
@@ -199,6 +203,22 @@ public partial class App : Application
         _window.UpdateLayout();
         PositionPanel();
         if (activate) { _window.Activate(); _window.Focus(); }
+        else
+        {
+            var hwnd = new WindowInteropHelper(_window).EnsureHandle();
+            if (!NativeMethods.SetWindowPos(
+                    hwnd,
+                    NativeMethods.HwndTopmost,
+                    0,
+                    0,
+                    0,
+                    0,
+                    NativeMethods.SWP_NOMOVE |
+                    NativeMethods.SWP_NOSIZE |
+                    NativeMethods.SWP_NOACTIVATE |
+                    NativeMethods.SWP_SHOWWINDOW))
+                _logger.Warning("Hover panel could not be raised without activation.");
+        }
         UpdatePanelBounds();
         StartPolling();
     }
@@ -281,6 +301,28 @@ public partial class App : Application
         catch (Exception ex) { _logger.Warning("Refresh failed.", ex); }
     }
 
+    private void OnDevicesInvalidated(object? sender, EventArgs e)
+    {
+        if (_exiting) return;
+        _ = Dispatcher.BeginInvoke(() =>
+        {
+            _invalidationRefresh?.Cancel();
+            _invalidationRefresh?.Dispose();
+            _invalidationRefresh = CancellationTokenSource.CreateLinkedTokenSource(_lifetime.Token);
+            _ = RefreshAfterInvalidationAsync(_invalidationRefresh.Token);
+        });
+    }
+
+    private async Task RefreshAfterInvalidationAsync(CancellationToken token)
+    {
+        try
+        {
+            await Task.Delay(TimeSpan.FromMilliseconds(300), token);
+            await SafeRefreshAsync(false, true, token);
+        }
+        catch (OperationCanceledException) when (token.IsCancellationRequested) { }
+    }
+
     private async void OnConnectionChanged(object? sender, DeviceConnectionChangedEventArgs e)
     {
         try
@@ -322,6 +364,9 @@ public partial class App : Application
         if (_exiting) return;
         _exiting = true;
         _lifetime.Cancel();
+        _invalidationRefresh?.Cancel();
+        _invalidationRefresh?.Dispose();
+        _invalidationRefresh = null;
         HidePanel();
         _tray?.Dispose();
         _tray = null;

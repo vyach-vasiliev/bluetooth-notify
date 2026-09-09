@@ -14,6 +14,11 @@ public sealed class PreferencesChangedEventArgs(AppLanguagePreference language, 
     public AppThemePreference Theme { get; } = theme;
 }
 
+public sealed class BatteryStatusChangedEventArgs(int? minimumBatteryPercent) : EventArgs
+{
+    public int? MinimumBatteryPercent { get; } = minimumBatteryPercent;
+}
+
 public sealed class TrayPanelViewModel : ObservableObject
 {
     private readonly IBluetoothDeviceMonitor _monitor;
@@ -52,6 +57,7 @@ public sealed class TrayPanelViewModel : ObservableObject
     public AsyncCommand ToggleNotificationsCommand { get; }
     public event EventHandler? ExitRequested;
     public event EventHandler<PreferencesChangedEventArgs>? PreferencesChanged;
+    public event EventHandler<BatteryStatusChangedEventArgs>? BatteryStatusChanged;
     public RelayCommand ExitCommand => _exitCommand;
     public RelayCommand OpenSettingsCommand => _openSettingsCommand;
     public RelayCommand CloseSettingsCommand => _closeSettingsCommand;
@@ -73,10 +79,21 @@ public sealed class TrayPanelViewModel : ObservableObject
     }
     public string NotificationsText => NotificationsEnabled ? Properties.Strings.NotificationsEnabled : Properties.Strings.Notifications;
     public string NotificationsIconGlyph => GetNotificationsIconGlyph(NotificationsEnabled);
-    public string BatterySummary => string.Format(Properties.Strings.DevicesWithBattery, Devices.Count(x => x.HasBattery));
+    public string BatterySummary => string.Format(Properties.Strings.DevicesWithBattery, CountConnectedBatteryDevices(Devices));
     public string UpdatedText => _updatedAt is { } at ? string.Format(Properties.Strings.Updated, at) : Properties.Strings.Loading;
 
     public static string GetNotificationsIconGlyph(bool enabled) => enabled ? "\uF2A3" : "\uF285";
+
+    public static int CountConnectedBatteryDevices(IEnumerable<BluetoothDeviceViewModel> devices) =>
+        devices.Count(device => device.IsConnected && device.HasBattery);
+
+    public static int? GetMinimumConnectedBattery(IEnumerable<BluetoothDeviceViewModel> devices)
+    {
+        var values = devices.Where(device => device.IsConnected && device.HasBattery)
+            .Select(device => device.BatteryPercent!.Value)
+            .ToArray();
+        return values.Length == 0 ? null : values.Min();
+    }
 
     public bool IsSettingsOpen { get => _isSettingsOpen; private set => SetProperty(ref _isSettingsOpen, value); }
     public AppLanguagePreference LanguagePreference
@@ -168,6 +185,7 @@ public sealed class TrayPanelViewModel : ObservableObject
         OnPropertyChanged(nameof(UpdatedText));
         OnPropertyChanged(nameof(BatterySummary));
         OnPropertyChanged(nameof(ShowEmptyState));
+        BatteryStatusChanged?.Invoke(this, new BatteryStatusChangedEventArgs(GetMinimumConnectedBattery(Devices)));
     }
 
     private async Task ToggleNotificationsAsync()

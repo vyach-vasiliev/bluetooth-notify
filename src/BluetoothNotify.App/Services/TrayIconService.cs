@@ -15,8 +15,7 @@ public sealed class TrayIconService(AppLogger logger, AppThemePreference themePr
     private readonly DispatcherTimer _pointerTimer = new(DispatcherPriority.Input) { Interval = TimeSpan.FromMilliseconds(50) };
     private HwndSource? _source;
     private NativeMethods.NotifyIconData _data;
-    private nint _darkIcon;
-    private nint _lightIcon;
+    private readonly Dictionary<(bool LightTheme, BatteryLevelCategory Category), nint> _icons = [];
     private uint _taskbarCreated;
     private NativeRect? _panelBounds;
     private DateTimeOffset? _enteredAt;
@@ -25,6 +24,7 @@ public sealed class TrayIconService(AppLogger logger, AppThemePreference themePr
     private NativeRect _lastIconRect;
     private bool _hoverRaised;
     private bool _usesLightTheme;
+    private BatteryLevelCategory _batteryCategory = BatteryLevelCategory.Unknown;
     private DateTimeOffset _lastThemeCheckAt;
     private AppThemePreference _themePreference = themePreference;
 
@@ -48,8 +48,9 @@ public sealed class TrayIconService(AppLogger logger, AppThemePreference themePr
         _source = new HwndSource(parameters);
         _source.AddHook(WndProc);
         _taskbarCreated = NativeMethods.RegisterWindowMessage("TaskbarCreated");
-        _darkIcon = CreateBluetoothIcon(false);
-        _lightIcon = CreateBluetoothIcon(true);
+        foreach (var lightTheme in new[] { false, true })
+        foreach (var category in new[] { BatteryLevelCategory.Normal, BatteryLevelCategory.Low, BatteryLevelCategory.Critical })
+            _icons[(lightTheme, category)] = CreateBluetoothIcon(lightTheme, category);
         _usesLightTheme = ResolveUsesLightTheme();
         AddIcon();
         _pointerTimer.Tick += OnPointerTick;
@@ -178,6 +179,14 @@ public sealed class TrayIconService(AppLogger logger, AppThemePreference themePr
 
     public void SetPanelBounds(NativeRect? bounds) => _panelBounds = bounds;
 
+    public void SetBatteryStatus(int? minimumBatteryPercent)
+    {
+        var category = BatteryLevelClassifier.GetCategory(minimumBatteryPercent);
+        if (category == _batteryCategory) return;
+        _batteryCategory = category;
+        UpdateDisplayedIcon();
+    }
+
     public void SetThemePreference(AppThemePreference preference)
     {
         _themePreference = preference;
@@ -185,7 +194,11 @@ public sealed class TrayIconService(AppLogger logger, AppThemePreference themePr
         UpdateIconForTheme();
     }
 
-    private nint ActiveIcon => _usesLightTheme ? _lightIcon : _darkIcon;
+    private BatteryLevelCategory IconBatteryCategory => _batteryCategory is BatteryLevelCategory.Low or BatteryLevelCategory.Critical
+        ? _batteryCategory
+        : BatteryLevelCategory.Normal;
+
+    private nint ActiveIcon => _icons.GetValueOrDefault((_usesLightTheme, IconBatteryCategory));
 
     private void UpdateIconForTheme()
     {
@@ -193,20 +206,28 @@ public sealed class TrayIconService(AppLogger logger, AppThemePreference themePr
         if (now - _lastThemeCheckAt < TimeSpan.FromSeconds(2)) return;
         _lastThemeCheckAt = now;
         var usesLightTheme = ResolveUsesLightTheme();
-        if (usesLightTheme == _usesLightTheme || _source is null) return;
+        if (usesLightTheme == _usesLightTheme) return;
 
         _usesLightTheme = usesLightTheme;
-        _data.hIcon = ActiveIcon;
+        UpdateDisplayedIcon();
+    }
+
+    private void UpdateDisplayedIcon()
+    {
+        if (_source is null) return;
         var update = _data;
+        update.hIcon = ActiveIcon;
         update.uFlags = NativeMethods.NIF_ICON;
         if (!NativeMethods.Shell_NotifyIcon(NativeMethods.NIM_MODIFY, ref update))
-            logger.Warning("Tray icon theme update failed.");
+            logger.Warning("Tray icon appearance update failed.");
+        else
+            _data.hIcon = update.hIcon;
     }
 
     private bool ResolveUsesLightTheme() =>
         ThemeManager.ShouldUseLightTheme(_themePreference, ThemeManager.IsWindowsAppLightTheme());
 
-    private static nint CreateBluetoothIcon(bool lightTheme)
+    private static nint CreateBluetoothIcon(bool lightTheme, BatteryLevelCategory batteryCategory)
     {
         const int size = 64;
         using var bitmap = new Bitmap(size, size, PixelFormat.Format32bppArgb);
@@ -221,9 +242,25 @@ public sealed class TrayIconService(AppLogger logger, AppThemePreference themePr
             ? Color.FromArgb(255, 16, 82, 166)
             : Color.FromArgb(255, 76, 147, 255));
         using var format = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
-        graphics.DrawString("\uE702", font, foreground, new RectangleF(0, -2, size, size + 4), format);
+        var bounds = new RectangleF(0, -2, size, size + 4);
+        graphics.DrawString("\uE702", font, foreground, bounds, format);
+        if (batteryCategory is BatteryLevelCategory.Low or BatteryLevelCategory.Critical)
+        {
+            using var status = new SolidBrush(GetStatusDotColor(lightTheme, batteryCategory));
+            // UpdateStatusDot2 is designed to align with another Fluent icon when both
+            // glyphs share the same font size and bounds.
+            graphics.DrawString("\uEC83", font, status, bounds, format);
+        }
         return bitmap.GetHicon();
     }
+
+    private static Color GetStatusDotColor(bool lightTheme, BatteryLevelCategory category) => category switch
+    {
+        BatteryLevelCategory.Critical => lightTheme
+            ? Color.FromArgb(255, 200, 58, 71)
+            : Color.FromArgb(255, 240, 90, 103),
+        _ => Color.FromArgb(255, 232, 192, 0)
+    };
 
     public void Dispose()
     {
@@ -235,7 +272,8 @@ public sealed class TrayIconService(AppLogger logger, AppThemePreference themePr
             _source.Dispose();
             _source = null;
         }
-        if (_darkIcon != 0) { NativeMethods.DestroyIcon(_darkIcon); _darkIcon = 0; }
-        if (_lightIcon != 0) { NativeMethods.DestroyIcon(_lightIcon); _lightIcon = 0; }
+        foreach (var icon in _icons.Values)
+            if (icon != 0) NativeMethods.DestroyIcon(icon);
+        _icons.Clear();
     }
 }
