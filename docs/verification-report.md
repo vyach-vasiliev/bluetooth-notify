@@ -41,4 +41,18 @@
 - taskbar на всех четырёх сторонах и два монитора с разными DPI;
 - UI Automation через внешний screen reader.
 
-Установщик и его install/update/uninstall-проверки исключены из задачи пользователем.
+## Установщик
+
+Добавлен двуязычный Inno Setup installer для установки в профиль текущего пользователя. Сборочный скрипт публикует приложение в framework-dependent режиме, проверяет отсутствие файлов .NET runtime и получает версию из `Directory.Build.props`. Установщик проверяет .NET Desktop Runtime 10 x64 и Windows App Runtime 1.8 x64, создаёт Start Menu shortcut с AppUserModelID `BluetoothNotify.App`, штатно закрывает приложение через `--exit` при обновлении/удалении и предлагает отдельно удалить настройки и журналы.
+
+Фактически проверено 2026-09-09:
+
+- Inno Setup 6.7.3 скомпилировал английскую и русскую локализации без warnings/errors;
+- создан `artifacts\installer\BluetoothNotify-Setup-1.0.0-x64.exe` размером 8 235 148 байт, SHA-256 `06BA323D11AEA8CBB4D973E28E50A3D5B86FB37EA56079590C1E99849889E8CB`;
+- тихая установка завершилась с exit code 0, создала 48 файлов в `%LocalAppData%\Programs\Bluetooth Notify`, per-user uninstall entry версии 1.0.0 и ярлык меню «Пуск»;
+- свойство `System.AppUserModel.ID` созданного ярлыка равно `BluetoothNotify.App`;
+- повторная установка на русском языке при работающем приложении завершила экземпляр через `--exit`, обновила файлы и не перезапустила приложение в silent-режиме;
+- удаление при работающем приложении завершилось с exit code 0, остановило процесс и удалило каталог программы, ярлык и uninstall entry;
+- в silent-режиме ответ по умолчанию сохранил `%LocalAppData%\BluetoothNotify\settings.json`; SHA-256 файла до и после удаления совпал;
+- тестовый installer с заведомо отсутствующим `.NET Desktop Runtime 99.0` завершился с exit code 1 до установки и не создал каталог программы;
+- итоговый `dotnet build -c Release` прошёл без warnings/errors, `dotnet test -c Release` — 73/73 теста успешно.

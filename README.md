@@ -6,9 +6,9 @@
 
 - Windows 11 22H2 (build 22621) или новее, x64;
 - [.NET Desktop Runtime 10 x64](https://dotnet.microsoft.com/download/dotnet/10.0);
-- [Windows App Runtime 1.8 x64](https://learn.microsoft.com/windows/apps/windows-app-sdk/downloads) для нативных app notifications.
+- [Windows App Runtime 1.8 x64](https://learn.microsoft.com/windows/apps/windows-app-sdk/downloads-archive#version-18) для нативных app notifications.
 
-Публикация framework-dependent: .NET и Windows App Runtime в неё не встроены. Установщик по текущей задаче намеренно не реализован.
+Публикация framework-dependent: .NET и Windows App Runtime в неё не встроены. Двуязычный установщик (русский/английский) проверяет оба prerequisite перед установкой и открывает официальные страницы загрузки, если компонент отсутствует.
 
 ## Сборка и запуск
 
@@ -42,6 +42,35 @@ dotnet publish .\src\BluetoothNotify.App\BluetoothNotify.App.csproj `
 Стандартный результат находится в `src\BluetoothNotify.App\bin\Release\net10.0-windows10.0.22621.0\win-x64\publish`. Проверенный в этой рабочей копии артефакт также лежит в `artifacts\publish\win-x64`.
 
 Это не «один exe»: рядом с `BluetoothNotify.App.exe` должны оставаться `.dll`, `.deps.json`, `.runtimeconfig.json`, `.pri` и bootstrap/projection-библиотеки приложения. Отсутствие `coreclr.dll`, `clrjit.dll`, `hostfxr.dll` и файлов `PresentationFramework.dll` в publish подтверждает, что .NET runtime не включён.
+
+## Установщик
+
+Установите [Inno Setup 6](https://jrsoftware.org/isdl.php), затем выполните:
+
+```powershell
+.\tools\Build-Installer.ps1
+```
+
+Скрипт берёт версию из `Directory.Build.props`, выполняет restore/build/test, создаёт framework-dependent publish, проверяет отсутствие файлов .NET runtime и компилирует `installer\BluetoothNotify.iss`. Для нестандартного расположения компилятора используйте:
+
+```powershell
+.\tools\Build-Installer.ps1 -InnoSetupCompiler 'C:\Tools\Inno Setup 6\ISCC.exe'
+```
+
+Готовый файл создаётся в `artifacts\installer\BluetoothNotify-Setup-<версия>-x64.exe`. Установщик:
+
+- автоматически выбирает язык Windows и позволяет выбрать English или Русский;
+- устанавливает приложение для текущего пользователя в `%LocalAppData%\Programs\Bluetooth Notify` без запроса прав администратора;
+- проверяет .NET Desktop Runtime 10 x64 и совместимый Windows App Runtime 1.8 x64, но не включает и не устанавливает их;
+- создаёт ярлык меню «Пуск» с постоянным AppUserModelID `BluetoothNotify.App` для нативных уведомлений;
+- штатно завершает запущенное приложение при обновлении и удалении;
+- при удалении отдельно спрашивает, нужно ли удалить `%LocalAppData%\BluetoothNotify` с настройками и журналами. По умолчанию пользовательские данные сохраняются.
+
+Для сборки без повторного запуска тестов можно передать `-SkipTests`. Прямой вызов Inno Setup после готового publish также поддерживается:
+
+```powershell
+& 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' .\installer\BluetoothNotify.iss
+```
 
 ## Архитектура
 

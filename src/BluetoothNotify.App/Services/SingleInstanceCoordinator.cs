@@ -4,6 +4,8 @@ namespace BluetoothNotify.App.Services;
 
 public sealed class SingleInstanceCoordinator : IDisposable
 {
+    public const string ShowCommand = "show";
+    public const string ExitCommand = "exit";
     private const string MutexName = "Local\\BluetoothNotify.App.Singleton";
     private const string PipeName = "BluetoothNotify.App.CommandPipe";
     private readonly Mutex _mutex = new(false, MutexName);
@@ -16,7 +18,7 @@ public sealed class SingleInstanceCoordinator : IDisposable
         catch (AbandonedMutexException) { return true; }
     }
 
-    public void StartServer(Action showAction)
+    public void StartServer(Action<string> commandAction)
     {
         _server = Task.Run(async () =>
         {
@@ -27,7 +29,8 @@ public sealed class SingleInstanceCoordinator : IDisposable
                     await using var server = new NamedPipeServerStream(PipeName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
                     await server.WaitForConnectionAsync(_lifetime.Token).ConfigureAwait(false);
                     using var reader = new StreamReader(server);
-                    if (await reader.ReadLineAsync(_lifetime.Token).ConfigureAwait(false) == "show") showAction();
+                    var command = await reader.ReadLineAsync(_lifetime.Token).ConfigureAwait(false);
+                    if (command is ShowCommand or ExitCommand) commandAction(command);
                 }
                 catch (OperationCanceledException) { break; }
                 catch { await Task.Delay(250, _lifetime.Token).ConfigureAwait(false); }
@@ -35,14 +38,14 @@ public sealed class SingleInstanceCoordinator : IDisposable
         });
     }
 
-    public static async Task SignalExistingAsync()
+    public static async Task SignalExistingAsync(string command = ShowCommand)
     {
         try
         {
             await using var client = new NamedPipeClientStream(".", PipeName, PipeDirection.Out, PipeOptions.Asynchronous);
             await client.ConnectAsync(800).ConfigureAwait(false);
             await using var writer = new StreamWriter(client) { AutoFlush = true };
-            await writer.WriteLineAsync("show").ConfigureAwait(false);
+            await writer.WriteLineAsync(command).ConfigureAwait(false);
         }
         catch { }
     }

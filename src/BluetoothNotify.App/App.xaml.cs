@@ -38,10 +38,22 @@ public partial class App : Application
     {
         base.OnStartup(e);
         RegisterExceptionHandlers();
+        var exitRequested = e.Args.Contains("--exit", StringComparer.OrdinalIgnoreCase);
         _singleInstance = new SingleInstanceCoordinator();
         if (!_singleInstance.TryAcquire())
         {
-            await SingleInstanceCoordinator.SignalExistingAsync();
+            await SingleInstanceCoordinator.SignalExistingAsync(exitRequested
+                ? SingleInstanceCoordinator.ExitCommand
+                : SingleInstanceCoordinator.ShowCommand);
+            Shutdown();
+            return;
+        }
+
+        // Installers and uninstallers can request a clean shutdown without starting a new tray instance.
+        if (exitRequested)
+        {
+            _singleInstance.Dispose();
+            _singleInstance = null;
             Shutdown();
             return;
         }
@@ -80,10 +92,18 @@ public partial class App : Application
             await _monitor.StartAsync(_lifetime.Token);
             await SafeRefreshAsync(false, false, _lifetime.Token);
             _ = PollBatteryNotificationsAsync(_lifetime.Token);
-            _singleInstance.StartServer(() => Dispatcher.BeginInvoke(() =>
+            _singleInstance.StartServer(command => Dispatcher.BeginInvoke(() =>
             {
-                _logger.Info("Show command received from another instance.");
-                ShowPanelFromExternalCommand();
+                if (command == SingleInstanceCoordinator.ExitCommand)
+                {
+                    _logger.Info("Exit command received from another instance.");
+                    ExitApplication();
+                }
+                else
+                {
+                    _logger.Info("Show command received from another instance.");
+                    ShowPanelFromExternalCommand();
+                }
             }));
             if (e.Args.Contains("--show", StringComparer.OrdinalIgnoreCase))
                 _ = Dispatcher.BeginInvoke(ShowPanelFromExternalCommand);
