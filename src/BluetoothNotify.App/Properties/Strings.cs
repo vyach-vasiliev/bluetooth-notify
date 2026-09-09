@@ -43,6 +43,18 @@ public static class Strings
     public static string BatteryReadError => Get(nameof(BatteryReadError));
     public static string DeviceConnectedNotification => Get(nameof(DeviceConnectedNotification));
     public static string BatteryNotification => Get(nameof(BatteryNotification));
+    public static string BatteryNotifications => Get(nameof(BatteryNotifications));
+    public static string BatteryNotificationsDescription => Get(nameof(BatteryNotificationsDescription));
+    public static string MediumBatteryLevel => Get(nameof(MediumBatteryLevel));
+    public static string MediumBatteryLevelDescription => Get(nameof(MediumBatteryLevelDescription));
+    public static string MediumBatteryThreshold => Get(nameof(MediumBatteryThreshold));
+    public static string MediumBatteryNotificationToggle => Get(nameof(MediumBatteryNotificationToggle));
+    public static string LowBatteryLevel => Get(nameof(LowBatteryLevel));
+    public static string LowBatteryLevelDescription => Get(nameof(LowBatteryLevelDescription));
+    public static string LowBatteryThreshold => Get(nameof(LowBatteryThreshold));
+    public static string LowBatteryNotificationToggle => Get(nameof(LowBatteryNotificationToggle));
+    public static string MediumBatteryNotification => Get(nameof(MediumBatteryNotification));
+    public static string LowBatteryNotification => Get(nameof(LowBatteryNotification));
     public static string StatusAutomationName => Get(nameof(StatusAutomationName));
     public static string Loading => Get(nameof(Loading));
 }

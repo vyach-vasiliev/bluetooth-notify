@@ -15,12 +15,20 @@ public sealed class SettingsStoreTests : IDisposable
         {
             NotificationsEnabled = false,
             Language = AppLanguagePreference.EnglishUnitedStates,
-            Theme = AppThemePreference.Light
+            Theme = AppThemePreference.Light,
+            MediumBatteryNotificationEnabled = false,
+            MediumBatteryThresholdPercent = 40,
+            LowBatteryNotificationEnabled = true,
+            LowBatteryThresholdPercent = 10
         });
         var result = await store.LoadAsync();
         Assert.False(result.NotificationsEnabled);
         Assert.Equal(AppLanguagePreference.EnglishUnitedStates, result.Language);
         Assert.Equal(AppThemePreference.Light, result.Theme);
+        Assert.False(result.MediumBatteryNotificationEnabled);
+        Assert.Equal(40, result.MediumBatteryThresholdPercent);
+        Assert.True(result.LowBatteryNotificationEnabled);
+        Assert.Equal(10, result.LowBatteryThresholdPercent);
         Assert.Equal(AppSettings.CurrentSchemaVersion, result.SchemaVersion);
     }
 
@@ -43,7 +51,24 @@ public sealed class SettingsStoreTests : IDisposable
         Assert.False(result.NotificationsEnabled);
         Assert.Equal(AppLanguagePreference.System, result.Language);
         Assert.Equal(AppThemePreference.System, result.Theme);
+        Assert.True(result.MediumBatteryNotificationEnabled);
+        Assert.Equal(30, result.MediumBatteryThresholdPercent);
+        Assert.True(result.LowBatteryNotificationEnabled);
+        Assert.Equal(15, result.LowBatteryThresholdPercent);
         Assert.Equal(AppSettings.CurrentSchemaVersion, result.SchemaVersion);
+    }
+
+    [Fact]
+    public async Task UnsupportedThresholds_FallBackToDefaults()
+    {
+        Directory.CreateDirectory(_directory);
+        await File.WriteAllTextAsync(Path.Combine(_directory, "settings.json"),
+            "{\"SchemaVersion\":3,\"MediumBatteryThresholdPercent\":17,\"LowBatteryThresholdPercent\":90}");
+
+        var result = await new SettingsStore(_directory).LoadAsync();
+
+        Assert.Equal(30, result.MediumBatteryThresholdPercent);
+        Assert.Equal(15, result.LowBatteryThresholdPercent);
     }
 
     [Fact]

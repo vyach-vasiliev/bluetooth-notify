@@ -52,8 +52,18 @@ public sealed class SettingsStore(string? baseDirectory = null) : ISettingsStore
             : AppLanguagePreference.System,
         Theme = Enum.IsDefined(value?.Theme ?? AppThemePreference.System)
             ? value?.Theme ?? AppThemePreference.System
-            : AppThemePreference.System
+            : AppThemePreference.System,
+        MediumBatteryNotificationEnabled = value?.MediumBatteryNotificationEnabled ?? true,
+        MediumBatteryThresholdPercent = NormalizeMediumThreshold(value?.MediumBatteryThresholdPercent ?? 30),
+        LowBatteryNotificationEnabled = value?.LowBatteryNotificationEnabled ?? true,
+        LowBatteryThresholdPercent = NormalizeLowThreshold(value?.LowBatteryThresholdPercent ?? 15)
     };
+
+    private static int NormalizeMediumThreshold(int value) =>
+        value is >= 20 and <= 50 && value % 5 == 0 ? value : 30;
+
+    private static int NormalizeLowThreshold(int value) =>
+        value is >= 5 and <= 15 && value % 5 == 0 ? value : 15;
 
     private void TryBackupCorruptFile()
     {

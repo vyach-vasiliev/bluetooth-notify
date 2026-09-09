@@ -19,6 +19,11 @@ public sealed class BatteryStatusChangedEventArgs(int? minimumBatteryPercent) : 
     public int? MinimumBatteryPercent { get; } = minimumBatteryPercent;
 }
 
+public sealed class DevicesRefreshedEventArgs(IReadOnlyList<BluetoothDeviceState> devices) : EventArgs
+{
+    public IReadOnlyList<BluetoothDeviceState> Devices { get; } = devices;
+}
+
 public sealed class TrayPanelViewModel : ObservableObject
 {
     private readonly IBluetoothDeviceMonitor _monitor;
@@ -38,6 +43,10 @@ public sealed class TrayPanelViewModel : ObservableObject
     private bool _isSettingsOpen;
     private AppLanguagePreference _languagePreference;
     private AppThemePreference _themePreference;
+    private bool _mediumBatteryNotificationEnabled = true;
+    private int _mediumBatteryThresholdPercent = 30;
+    private bool _lowBatteryNotificationEnabled = true;
+    private int _lowBatteryThresholdPercent = 15;
 
     public TrayPanelViewModel(IBluetoothDeviceMonitor monitor, ISettingsStore settingsStore, IDeviceIconResolver icons, Dispatcher dispatcher)
     {
@@ -58,6 +67,7 @@ public sealed class TrayPanelViewModel : ObservableObject
     public event EventHandler? ExitRequested;
     public event EventHandler<PreferencesChangedEventArgs>? PreferencesChanged;
     public event EventHandler<BatteryStatusChangedEventArgs>? BatteryStatusChanged;
+    public event EventHandler<DevicesRefreshedEventArgs>? DevicesRefreshed;
     public RelayCommand ExitCommand => _exitCommand;
     public RelayCommand OpenSettingsCommand => _openSettingsCommand;
     public RelayCommand CloseSettingsCommand => _closeSettingsCommand;
@@ -102,7 +112,7 @@ public sealed class TrayPanelViewModel : ObservableObject
         set
         {
             if (!SetProperty(ref _languagePreference, value)) return;
-            _ = PersistPreferencesAsync();
+            _ = PersistSettingsAsync(true);
         }
     }
     public AppThemePreference ThemePreference
@@ -111,7 +121,43 @@ public sealed class TrayPanelViewModel : ObservableObject
         set
         {
             if (!SetProperty(ref _themePreference, value)) return;
-            _ = PersistPreferencesAsync();
+            _ = PersistSettingsAsync(true);
+        }
+    }
+    public bool MediumBatteryNotificationEnabled
+    {
+        get => _mediumBatteryNotificationEnabled;
+        set
+        {
+            if (!SetProperty(ref _mediumBatteryNotificationEnabled, value)) return;
+            _ = PersistSettingsAsync(false);
+        }
+    }
+    public int MediumBatteryThresholdPercent
+    {
+        get => _mediumBatteryThresholdPercent;
+        set
+        {
+            if (!SetProperty(ref _mediumBatteryThresholdPercent, value)) return;
+            _ = PersistSettingsAsync(false);
+        }
+    }
+    public bool LowBatteryNotificationEnabled
+    {
+        get => _lowBatteryNotificationEnabled;
+        set
+        {
+            if (!SetProperty(ref _lowBatteryNotificationEnabled, value)) return;
+            _ = PersistSettingsAsync(false);
+        }
+    }
+    public int LowBatteryThresholdPercent
+    {
+        get => _lowBatteryThresholdPercent;
+        set
+        {
+            if (!SetProperty(ref _lowBatteryThresholdPercent, value)) return;
+            _ = PersistSettingsAsync(false);
         }
     }
     public IReadOnlyList<PreferenceOption<AppLanguagePreference>> LanguageOptions =>
@@ -126,6 +172,10 @@ public sealed class TrayPanelViewModel : ObservableObject
         new(AppThemePreference.Light, Properties.Strings.LightTheme),
         new(AppThemePreference.Dark, Properties.Strings.DarkTheme)
     ];
+    public IReadOnlyList<PreferenceOption<int>> MediumBatteryThresholdOptions =>
+        new[] { 20, 25, 30, 35, 40, 45, 50 }.Select(value => new PreferenceOption<int>(value, $"{value}%")).ToArray();
+    public IReadOnlyList<PreferenceOption<int>> LowBatteryThresholdOptions =>
+        new[] { 5, 10, 15 }.Select(value => new PreferenceOption<int>(value, $"{value}%")).ToArray();
 
     public void OpenSettings() => IsSettingsOpen = true;
     public void CloseSettings() => IsSettingsOpen = false;
@@ -135,11 +185,19 @@ public sealed class TrayPanelViewModel : ObservableObject
         _notificationsEnabled = settings.NotificationsEnabled;
         _languagePreference = settings.Language;
         _themePreference = settings.Theme;
+        _mediumBatteryNotificationEnabled = settings.MediumBatteryNotificationEnabled;
+        _mediumBatteryThresholdPercent = settings.MediumBatteryThresholdPercent;
+        _lowBatteryNotificationEnabled = settings.LowBatteryNotificationEnabled;
+        _lowBatteryThresholdPercent = settings.LowBatteryThresholdPercent;
         OnPropertyChanged(nameof(NotificationsEnabled));
         OnPropertyChanged(nameof(NotificationsText));
         OnPropertyChanged(nameof(NotificationsIconGlyph));
         OnPropertyChanged(nameof(LanguagePreference));
         OnPropertyChanged(nameof(ThemePreference));
+        OnPropertyChanged(nameof(MediumBatteryNotificationEnabled));
+        OnPropertyChanged(nameof(MediumBatteryThresholdPercent));
+        OnPropertyChanged(nameof(LowBatteryNotificationEnabled));
+        OnPropertyChanged(nameof(LowBatteryThresholdPercent));
     }
 
     public async Task InitializeAsync(CancellationToken cancellationToken)
@@ -186,6 +244,7 @@ public sealed class TrayPanelViewModel : ObservableObject
         OnPropertyChanged(nameof(BatterySummary));
         OnPropertyChanged(nameof(ShowEmptyState));
         BatteryStatusChanged?.Invoke(this, new BatteryStatusChangedEventArgs(GetMinimumConnectedBattery(Devices)));
+        DevicesRefreshed?.Invoke(this, new DevicesRefreshedEventArgs(snapshot.Devices));
     }
 
     private async Task ToggleNotificationsAsync()
@@ -203,13 +262,14 @@ public sealed class TrayPanelViewModel : ObservableObject
         }
     }
 
-    private async Task PersistPreferencesAsync()
+    private async Task PersistSettingsAsync(bool notifyAppearanceChanged)
     {
         try
         {
             await SaveCurrentSettingsAsync().ConfigureAwait(false);
-            await _dispatcher.InvokeAsync(() =>
-                PreferencesChanged?.Invoke(this, new PreferencesChangedEventArgs(LanguagePreference, ThemePreference)));
+            if (notifyAppearanceChanged)
+                await _dispatcher.InvokeAsync(() =>
+                    PreferencesChanged?.Invoke(this, new PreferencesChangedEventArgs(LanguagePreference, ThemePreference)));
         }
         catch
         {
@@ -226,7 +286,11 @@ public sealed class TrayPanelViewModel : ObservableObject
             {
                 NotificationsEnabled = NotificationsEnabled,
                 Language = LanguagePreference,
-                Theme = ThemePreference
+                Theme = ThemePreference,
+                MediumBatteryNotificationEnabled = MediumBatteryNotificationEnabled,
+                MediumBatteryThresholdPercent = MediumBatteryThresholdPercent,
+                LowBatteryNotificationEnabled = LowBatteryNotificationEnabled,
+                LowBatteryThresholdPercent = LowBatteryThresholdPercent
             });
             await _settingsStore.SaveAsync(settings).ConfigureAwait(false);
         }

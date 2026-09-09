@@ -16,6 +16,7 @@ public partial class App : Application
     private const string AppUserModelId = "BluetoothNotify.App";
     private readonly CancellationTokenSource _lifetime = new();
     private readonly AppLogger _logger = new();
+    private readonly BatteryNotificationTracker _batteryNotificationTracker = new();
     private SingleInstanceCoordinator? _singleInstance;
     private TrayIconService? _tray;
     private BatteryReader? _battery;
@@ -71,12 +72,14 @@ public partial class App : Application
             _viewModel.ExitRequested += (_, _) => ExitApplication();
             _viewModel.PreferencesChanged += OnPreferencesChanged;
             _viewModel.BatteryStatusChanged += (_, args) => _tray?.SetBatteryStatus(args.MinimumBatteryPercent);
+            _viewModel.DevicesRefreshed += OnDevicesRefreshed;
             _window = CreatePanelWindow();
 
             _monitor.ConnectionChanged += OnConnectionChanged;
             _monitor.DevicesInvalidated += OnDevicesInvalidated;
             await _monitor.StartAsync(_lifetime.Token);
             await SafeRefreshAsync(false, false, _lifetime.Token);
+            _ = PollBatteryNotificationsAsync(_lifetime.Token);
             _singleInstance.StartServer(() => Dispatcher.BeginInvoke(() =>
             {
                 _logger.Info("Show command received from another instance.");
@@ -294,6 +297,17 @@ public partial class App : Application
         catch (OperationCanceledException) { }
     }
 
+    private async Task PollBatteryNotificationsAsync(CancellationToken token)
+    {
+        try
+        {
+            using var timer = new PeriodicTimer(TimeSpan.FromMinutes(1));
+            while (await timer.WaitForNextTickAsync(token))
+                await SafeRefreshAsync(false, true, token);
+        }
+        catch (OperationCanceledException) when (token.IsCancellationRequested) { }
+    }
+
     private async Task SafeRefreshAsync(bool force, bool skipIfBusy, CancellationToken token)
     {
         try { if (_viewModel is not null) await _viewModel.RefreshAsync(force, skipIfBusy, token); }
@@ -345,6 +359,26 @@ public partial class App : Application
         }
         catch (OperationCanceledException) when (_lifetime.IsCancellationRequested) { }
         catch (Exception ex) { _logger.Warning("Connection notification failed.", ex); }
+    }
+
+    private async void OnDevicesRefreshed(object? sender, DevicesRefreshedEventArgs e)
+    {
+        try
+        {
+            if (_viewModel is null) return;
+            var options = new BatteryNotificationOptions(
+                _viewModel.MediumBatteryNotificationEnabled,
+                _viewModel.MediumBatteryThresholdPercent,
+                _viewModel.LowBatteryNotificationEnabled,
+                _viewModel.LowBatteryThresholdPercent);
+            var alerts = _batteryNotificationTracker.Observe(e.Devices, options);
+            if (!_viewModel.NotificationsEnabled || _notifications is null) return;
+
+            foreach (var alert in alerts)
+                await _notifications.ShowBatteryLevelAsync(alert, _lifetime.Token);
+        }
+        catch (OperationCanceledException) when (_lifetime.IsCancellationRequested) { }
+        catch (Exception ex) { _logger.Warning("Battery threshold notification failed.", ex); }
     }
 
     private void HidePanel()

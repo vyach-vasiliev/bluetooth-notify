@@ -155,7 +155,8 @@
                     </StackPanel>
                 </Grid>
 
-                <StackPanel Grid.Row="1" Margin="16,4,16,18">
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" MaxHeight="500">
+                <StackPanel Margin="16,4,16,18">
                     <Border Background="{DynamicResource Surface.Background}" BorderBrush="{DynamicResource Card.Border}" BorderThickness="1" CornerRadius="14" Padding="16">
                         <Grid>
                             <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
@@ -172,7 +173,49 @@
                                       SelectedValue="{Binding ThemePreference, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{x:Static p:Strings.Theme}" />
                         </Grid>
                     </Border>
+
+                    <StackPanel Margin="4,20,4,9">
+                        <TextBlock Text="{x:Static p:Strings.BatteryNotifications}" FontWeight="SemiBold" FontSize="14" />
+                        <TextBlock Text="{x:Static p:Strings.BatteryNotificationsDescription}" Foreground="{DynamicResource Text.Secondary}" FontSize="12" Margin="0,3,0,0" TextWrapping="Wrap" />
+                    </StackPanel>
+
+                    <Border Background="{DynamicResource Surface.Background}" BorderBrush="{DynamicResource Card.Border}" BorderThickness="1" CornerRadius="14">
+                        <Grid>
+                            <Grid.RowDefinitions><RowDefinition Height="64" /><RowDefinition Height="1" /><RowDefinition Height="64" /></Grid.RowDefinitions>
+
+                            <Grid Margin="16,0">
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="{x:Static p:Strings.MediumBatteryLevel}" FontWeight="SemiBold" />
+                                    <TextBlock Text="{x:Static p:Strings.MediumBatteryLevelDescription}" Foreground="{DynamicResource Text.Secondary}" FontSize="11" Margin="0,2,8,0" />
+                                </StackPanel>
+                                <ComboBox Grid.Column="1" Style="{StaticResource SettingsComboBox}" Width="82" MinWidth="82" Margin="8,0,4,0"
+                                          ItemsSource="{Binding MediumBatteryThresholdOptions}" DisplayMemberPath="Label" SelectedValuePath="Value"
+                                          SelectedValue="{Binding MediumBatteryThresholdPercent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          IsEnabled="{Binding MediumBatteryNotificationEnabled}" AutomationProperties.Name="{x:Static p:Strings.MediumBatteryThreshold}" />
+                                <ToggleButton Grid.Column="2" Style="{StaticResource SettingsSwitch}" IsChecked="{Binding MediumBatteryNotificationEnabled, Mode=TwoWay}"
+                                              ToolTip="{x:Static p:Strings.MediumBatteryNotificationToggle}" AutomationProperties.Name="{x:Static p:Strings.MediumBatteryNotificationToggle}" />
+                            </Grid>
+
+                            <Border Grid.Row="1" Height="1" Background="{DynamicResource Card.Border}" Margin="16,0" />
+
+                            <Grid Grid.Row="2" Margin="16,0">
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="{x:Static p:Strings.LowBatteryLevel}" FontWeight="SemiBold" />
+                                    <TextBlock Text="{x:Static p:Strings.LowBatteryLevelDescription}" Foreground="{DynamicResource Text.Secondary}" FontSize="11" Margin="0,2,8,0" />
+                                </StackPanel>
+                                <ComboBox Grid.Column="1" Style="{StaticResource SettingsComboBox}" Width="82" MinWidth="82" Margin="8,0,4,0"
+                                          ItemsSource="{Binding LowBatteryThresholdOptions}" DisplayMemberPath="Label" SelectedValuePath="Value"
+                                          SelectedValue="{Binding LowBatteryThresholdPercent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          IsEnabled="{Binding LowBatteryNotificationEnabled}" AutomationProperties.Name="{x:Static p:Strings.LowBatteryThreshold}" />
+                                <ToggleButton Grid.Column="2" Style="{StaticResource SettingsSwitch}" IsChecked="{Binding LowBatteryNotificationEnabled, Mode=TwoWay}"
+                                              ToolTip="{x:Static p:Strings.LowBatteryNotificationToggle}" AutomationProperties.Name="{x:Static p:Strings.LowBatteryNotificationToggle}" />
+                            </Grid>
+                        </Grid>
+                    </Border>
                 </StackPanel>
+                </ScrollViewer>
             </Grid>
         </Grid>
     </Border>

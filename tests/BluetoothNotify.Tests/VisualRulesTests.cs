@@ -75,6 +75,23 @@ public sealed class VisualRulesTests
         Assert.Contains("BluetoothNotify.Notification.png", notification.Payload);
     }
 
+    [Theory]
+    [InlineData(BatteryNotificationLevel.Medium, "🟡")]
+    [InlineData(BatteryNotificationLevel.Low, "🔴")]
+    public void ThresholdNotification_ContainsDeviceBatteryAndSeverity(BatteryNotificationLevel level, string indicator)
+    {
+        var device = new BluetoothDeviceState(
+            "device", "Test Headset", true, true, BluetoothTransport.Classic, BluetoothDeviceKind.Headphones,
+            12, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow, DeviceDataState.Fresh, ["endpoint"]);
+
+        var notification = NotificationService.BuildBatteryLevelNotification(new BatteryNotificationAlert(device, level, 15));
+
+        Assert.Contains("<text>Test Headset</text>", notification.Payload);
+        Assert.Contains(indicator, notification.Payload);
+        Assert.Contains("12%", notification.Payload);
+        Assert.Contains("BluetoothNotify.Notification.png", notification.Payload);
+    }
+
     [Fact]
     public void BatterySummary_ExcludesDisconnectedDevices()
     {

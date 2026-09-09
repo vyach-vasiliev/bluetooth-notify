@@ -29,6 +29,17 @@ public sealed class NotificationService(AppLogger logger) : INotificationService
         return Task.CompletedTask;
     }
 
+    public Task ShowBatteryLevelAsync(BatteryNotificationAlert alert, CancellationToken cancellationToken = default)
+    {
+        if (!_registered || cancellationToken.IsCancellationRequested) return Task.CompletedTask;
+        try
+        {
+            AppNotificationManager.Default.Show(BuildBatteryLevelNotification(alert));
+        }
+        catch (Exception ex) { logger.Warning("Battery notification could not be shown.", ex); }
+        return Task.CompletedTask;
+    }
+
     public static AppNotification BuildConnectedNotification(BluetoothDeviceState device)
     {
         var builder = new AppNotificationBuilder()
@@ -38,11 +49,30 @@ public sealed class NotificationService(AppLogger logger) : INotificationService
         if (device.BatteryPercent is { } battery)
             builder.AddText($"{GetBatteryIndicator(battery)} {string.Format(Properties.Strings.BatteryNotification, battery)}");
 
+        AddAppLogo(builder);
+
+        return builder.BuildNotification();
+    }
+
+    public static AppNotification BuildBatteryLevelNotification(BatteryNotificationAlert alert)
+    {
+        var levelText = alert.Level == BatteryNotificationLevel.Low
+            ? Properties.Strings.LowBatteryNotification
+            : Properties.Strings.MediumBatteryNotification;
+        var indicator = alert.Level == BatteryNotificationLevel.Low ? "🔴" : "🟡";
+        var builder = new AppNotificationBuilder()
+            .AddText(alert.Device.Name)
+            .AddText(levelText)
+            .AddText($"{indicator} {string.Format(Properties.Strings.BatteryNotification, alert.Device.BatteryPercent)}");
+        AddAppLogo(builder);
+        return builder.BuildNotification();
+    }
+
+    private static void AddAppLogo(AppNotificationBuilder builder)
+    {
         var logoPath = Path.Combine(AppContext.BaseDirectory, "Assets", "BluetoothNotify.Notification.png");
         if (File.Exists(logoPath))
             builder.SetAppLogoOverride(new Uri(logoPath), AppNotificationImageCrop.Default, Properties.Strings.AppTitle);
-
-        return builder.BuildNotification();
     }
 
     public static string GetBatteryIndicator(int batteryPercent) =>

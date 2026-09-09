@@ -128,4 +128,39 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="SettingsSwitch" TargetType="ToggleButton">
+        <Setter Property="Width" Value="48" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Grid Background="Transparent">
+                        <Border x:Name="SwitchTrack" Width="40" Height="22" CornerRadius="11"
+                                Background="{DynamicResource Battery.Track}" BorderBrush="{DynamicResource Border.Brush}" BorderThickness="1"
+                                HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <Ellipse x:Name="SwitchThumb" Width="16" Height="16" Margin="7,0,0,0"
+                                 Fill="{DynamicResource Text.Secondary}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="SwitchTrack" Property="Background" Value="{DynamicResource Accent.Brush}" />
+                            <Setter TargetName="SwitchTrack" Property="BorderBrush" Value="{DynamicResource Accent.Brush}" />
+                            <Setter TargetName="SwitchThumb" Property="Fill" Value="White" />
+                            <Setter TargetName="SwitchThumb" Property="HorizontalAlignment" Value="Right" />
+                            <Setter TargetName="SwitchThumb" Property="Margin" Value="0,0,7,0" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="SwitchTrack" Property="Opacity" Value="0.84" /></Trigger>
+                        <Trigger Property="IsPressed" Value="True"><Setter TargetName="SwitchThumb" Property="Opacity" Value="0.7" /></Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="SwitchTrack" Property="BorderBrush" Value="{DynamicResource Focus.Border}" /><Setter TargetName="SwitchTrack" Property="BorderThickness" Value="2" /></Trigger>
+                        <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.45" /></Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

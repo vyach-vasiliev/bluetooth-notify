@@ -30,6 +30,7 @@ public interface INotificationService : IAsyncDisposable
 {
     void Initialize();
     Task ShowConnectedAsync(BluetoothDeviceState device, CancellationToken cancellationToken = default);
+    Task ShowBatteryLevelAsync(BatteryNotificationAlert alert, CancellationToken cancellationToken = default);
 }
 
 public interface ISettingsStore
