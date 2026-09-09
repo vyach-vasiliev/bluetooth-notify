@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="AppTitle" xml:space="preserve"><value>Bluetooth Notify</value></data>
+  <data name="Subtitle" xml:space="preserve"><value>ペアリング済みデバイスのバッテリー残量</value></data>
+  <data name="Open" xml:space="preserve"><value>開く</value></data>
+  <data name="Refresh" xml:space="preserve"><value>更新</value></data>
+  <data name="Exit" xml:space="preserve"><value>終了</value></data>
+  <data name="Settings" xml:space="preserve"><value>設定</value></data>
+  <data name="SettingsDescription" xml:space="preserve"><value>言語、外観、通知</value></data>
+  <data name="Language" xml:space="preserve"><value>言語</value></data>
+  <data name="Theme" xml:space="preserve"><value>テーマ</value></data>
+  <data name="SystemDefault" xml:space="preserve"><value>システム設定を使用</value></data>
+  <data name="EnglishUnitedStates" xml:space="preserve"><value>English (United States)</value></data>
+  <data name="Russian" xml:space="preserve"><value>Русский</value></data>
+  <data name="German" xml:space="preserve"><value>Deutsch</value></data>
+  <data name="Japanese" xml:space="preserve"><value>日本語</value></data>
+  <data name="French" xml:space="preserve"><value>Français</value></data>
+  <data name="Spanish" xml:space="preserve"><value>Español</value></data>
+  <data name="Portuguese" xml:space="preserve"><value>Português</value></data>
+  <data name="Chinese" xml:space="preserve"><value>简体中文</value></data>
+  <data name="Korean" xml:space="preserve"><value>한국어</value></data>
+  <data name="LightTheme" xml:space="preserve"><value>ライト</value></data>
+  <data name="DarkTheme" xml:space="preserve"><value>ダーク</value></data>
+  <data name="Back" xml:space="preserve"><value>戻る</value></data>
+  <data name="Notifications" xml:space="preserve"><value>通知オフ</value></data>
+  <data name="NotificationsEnabled" xml:space="preserve"><value>通知オン</value></data>
+  <data name="Updated" xml:space="preserve"><value>更新: {0:HH:mm:ss}</value></data>
+  <data name="DevicesWithBattery" xml:space="preserve"><value>バッテリー情報あり: {0}</value></data>
+  <data name="DeviceFallbackName" xml:space="preserve"><value>Bluetooth デバイス</value></data>
+  <data name="Connected" xml:space="preserve"><value>接続済み</value></data>
+  <data name="Disconnected" xml:space="preserve"><value>未接続</value></data>
+  <data name="BatteryUnavailable" xml:space="preserve"><value>バッテリー残量を取得できません</value></data>
+  <data name="BatteryStale" xml:space="preserve"><value>バッテリー情報が古い可能性があります</value></data>
+  <data name="DisconnectedBatteryStale" xml:space="preserve"><value>デバイスは接続されていません。最後に確認されたバッテリー残量: {0}%</value></data>
+  <data name="NoDevices" xml:space="preserve"><value>ペアリング済みの Bluetooth デバイスが見つかりません</value></data>
+  <data name="BluetoothUnavailable" xml:space="preserve"><value>Bluetooth がオフか、利用できません</value></data>
+  <data name="PartialRefreshWarning" xml:space="preserve"><value>一部のデータを一時的に取得できません</value></data>
+  <data name="BatteryReadTimeout" xml:space="preserve"><value>デバイスからの応答がタイムアウトしました</value></data>
+  <data name="BatteryReadError" xml:space="preserve"><value>バッテリー残量を読み取れませんでした</value></data>
+  <data name="DeviceConnectedNotification" xml:space="preserve"><value>{0} が接続されました</value></data>
+  <data name="BatteryNotification" xml:space="preserve"><value>バッテリー: {0}%</value></data>
+  <data name="BatteryNotifications" xml:space="preserve"><value>バッテリー通知</value></data>
+  <data name="BatteryNotificationsDescription" xml:space="preserve"><value>接続中のデバイスのバッテリー残量が選択したレベルまで低下したときに通知します</value></data>
+  <data name="MediumBatteryLevel" xml:space="preserve"><value>中程度のバッテリー残量</value></data>
+  <data name="MediumBatteryLevelDescription" xml:space="preserve"><value>早めに通知</value></data>
+  <data name="MediumBatteryThreshold" xml:space="preserve"><value>中程度のバッテリーしきい値</value></data>
+  <data name="MediumBatteryNotificationToggle" xml:space="preserve"><value>中程度のバッテリー通知</value></data>
+  <data name="LowBatteryLevel" xml:space="preserve"><value>バッテリー残量低下</value></data>
+  <data name="LowBatteryLevelDescription" xml:space="preserve"><value>バッテリー切れを警告</value></data>
+  <data name="LowBatteryThreshold" xml:space="preserve"><value>低バッテリーしきい値</value></data>
+  <data name="LowBatteryNotificationToggle" xml:space="preserve"><value>低バッテリー通知</value></data>
+  <data name="MediumBatteryNotification" xml:space="preserve"><value>中程度のバッテリー残量</value></data>
+  <data name="LowBatteryNotification" xml:space="preserve"><value>バッテリー残量低下</value></data>
+  <data name="StatusAutomationName" xml:space="preserve"><value>{0} の状態</value></data>
+  <data name="Loading" xml:space="preserve"><value>データを更新中</value></data>
+</root>

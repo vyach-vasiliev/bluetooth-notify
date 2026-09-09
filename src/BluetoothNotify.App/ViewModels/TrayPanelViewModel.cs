@@ -164,7 +164,14 @@ public sealed class TrayPanelViewModel : ObservableObject
     [
         new(AppLanguagePreference.System, Properties.Strings.SystemDefault),
         new(AppLanguagePreference.EnglishUnitedStates, Properties.Strings.EnglishUnitedStates),
-        new(AppLanguagePreference.Russian, Properties.Strings.Russian)
+        new(AppLanguagePreference.Russian, Properties.Strings.Russian),
+        new(AppLanguagePreference.German, Properties.Strings.German),
+        new(AppLanguagePreference.Japanese, Properties.Strings.Japanese),
+        new(AppLanguagePreference.French, Properties.Strings.French),
+        new(AppLanguagePreference.Spanish, Properties.Strings.Spanish),
+        new(AppLanguagePreference.Portuguese, Properties.Strings.Portuguese),
+        new(AppLanguagePreference.Chinese, Properties.Strings.Chinese),
+        new(AppLanguagePreference.Korean, Properties.Strings.Korean)
     ];
     public IReadOnlyList<PreferenceOption<AppThemePreference>> ThemeOptions =>
     [

@@ -285,7 +285,7 @@ async function copyCommand() {
               <div class="theme-badges">
                 <span><Sun :size="16" aria-hidden="true" /> Light</span>
                 <span><Moon :size="16" aria-hidden="true" /> Dark</span>
-                <span><Languages :size="16" aria-hidden="true" /> EN / RU</span>
+                <span><Languages :size="16" aria-hidden="true" /> 9 Languages</span>
               </div>
             </div>
 

@@ -4,7 +4,14 @@ public enum AppLanguagePreference
 {
     System,
     EnglishUnitedStates,
-    Russian
+    Russian,
+    German,
+    Japanese,
+    French,
+    Spanish,
+    Portuguese,
+    Chinese,
+    Korean
 }
 
 public enum AppThemePreference

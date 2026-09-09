@@ -23,6 +23,13 @@ public static class Strings
     public static string SystemDefault => Get(nameof(SystemDefault));
     public static string EnglishUnitedStates => Get(nameof(EnglishUnitedStates));
     public static string Russian => Get(nameof(Russian));
+    public static string German => Get(nameof(German));
+    public static string Japanese => Get(nameof(Japanese));
+    public static string French => Get(nameof(French));
+    public static string Spanish => Get(nameof(Spanish));
+    public static string Portuguese => Get(nameof(Portuguese));
+    public static string Chinese => Get(nameof(Chinese));
+    public static string Korean => Get(nameof(Korean));
     public static string LightTheme => Get(nameof(LightTheme));
     public static string DarkTheme => Get(nameof(DarkTheme));
     public static string Back => Get(nameof(Back));

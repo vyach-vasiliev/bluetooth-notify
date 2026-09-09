@@ -11,9 +11,23 @@ public sealed class AppearanceSettingsTests
 {
     [Theory]
     [InlineData(AppLanguagePreference.System, "ru-RU", "ru-RU")]
-    [InlineData(AppLanguagePreference.System, "de-DE", "en-US")]
+    [InlineData(AppLanguagePreference.System, "de-AT", "de-DE")]
+    [InlineData(AppLanguagePreference.System, "ja-JP", "ja-JP")]
+    [InlineData(AppLanguagePreference.System, "fr-CA", "fr-FR")]
+    [InlineData(AppLanguagePreference.System, "es-MX", "es-ES")]
+    [InlineData(AppLanguagePreference.System, "pt-BR", "pt-PT")]
+    [InlineData(AppLanguagePreference.System, "zh-TW", "zh-CN")]
+    [InlineData(AppLanguagePreference.System, "ko-KR", "ko-KR")]
+    [InlineData(AppLanguagePreference.System, "it-IT", "en-US")]
     [InlineData(AppLanguagePreference.EnglishUnitedStates, "ru-RU", "en-US")]
     [InlineData(AppLanguagePreference.Russian, "en-US", "ru-RU")]
+    [InlineData(AppLanguagePreference.German, "en-US", "de-DE")]
+    [InlineData(AppLanguagePreference.Japanese, "en-US", "ja-JP")]
+    [InlineData(AppLanguagePreference.French, "en-US", "fr-FR")]
+    [InlineData(AppLanguagePreference.Spanish, "en-US", "es-ES")]
+    [InlineData(AppLanguagePreference.Portuguese, "en-US", "pt-PT")]
+    [InlineData(AppLanguagePreference.Chinese, "en-US", "zh-CN")]
+    [InlineData(AppLanguagePreference.Korean, "en-US", "ko-KR")]
     public void LanguagePreference_ResolvesSupportedCulture(
         AppLanguagePreference preference, string systemCulture, string expected)
     {
@@ -32,17 +46,46 @@ public sealed class AppearanceSettingsTests
         Assert.Equal(expected, ThemeManager.ShouldUseLightTheme(preference, systemLight));
 
     [Fact]
-    public void EnglishResources_ContainEveryUserFacingString()
+    public void LocalizedResources_ContainEveryUserFacingString()
     {
         var manager = new ResourceManager("BluetoothNotify.App.Properties.Strings", typeof(Strings).Assembly);
         var neutral = manager.GetResourceSet(CultureInfo.InvariantCulture, true, false);
-        var english = manager.GetResourceSet(CultureInfo.GetCultureInfo("en-US"), true, false);
 
         Assert.NotNull(neutral);
-        Assert.NotNull(english);
         var neutralKeys = neutral!.Cast<DictionaryEntry>().Select(item => (string)item.Key).Order().ToArray();
-        var englishKeys = english!.Cast<DictionaryEntry>().Select(item => (string)item.Key).Order().ToArray();
-        Assert.Equal(neutralKeys, englishKeys);
+        foreach (var cultureName in new[] { "en-US", "de-DE", "ja-JP", "fr-FR", "es-ES", "pt-PT", "zh-CN", "ko-KR" })
+        {
+            var localized = manager.GetResourceSet(CultureInfo.GetCultureInfo(cultureName), true, false);
+            Assert.NotNull(localized);
+            var localizedKeys = localized!.Cast<DictionaryEntry>().Select(item => (string)item.Key).Order().ToArray();
+            Assert.Equal(neutralKeys, localizedKeys);
+        }
         Assert.Equal("Settings", manager.GetString(nameof(Strings.Settings), CultureInfo.GetCultureInfo("en-US")));
+        Assert.Equal("Einstellungen", manager.GetString(nameof(Strings.Settings), CultureInfo.GetCultureInfo("de-DE")));
+        Assert.Equal("設定", manager.GetString(nameof(Strings.Settings), CultureInfo.GetCultureInfo("ja-JP")));
+        Assert.Equal("Paramètres", manager.GetString(nameof(Strings.Settings), CultureInfo.GetCultureInfo("fr-FR")));
+        Assert.Equal("Configuración", manager.GetString(nameof(Strings.Settings), CultureInfo.GetCultureInfo("es-ES")));
+        Assert.Equal("Definições", manager.GetString(nameof(Strings.Settings), CultureInfo.GetCultureInfo("pt-PT")));
+        Assert.Equal("设置", manager.GetString(nameof(Strings.Settings), CultureInfo.GetCultureInfo("zh-CN")));
+        Assert.Equal("설정", manager.GetString(nameof(Strings.Settings), CultureInfo.GetCultureInfo("ko-KR")));
+
+        var expectedLanguageNames = new Dictionary<string, string>
+        {
+            [nameof(Strings.EnglishUnitedStates)] = "English (United States)",
+            [nameof(Strings.Russian)] = "Русский",
+            [nameof(Strings.German)] = "Deutsch",
+            [nameof(Strings.Japanese)] = "日本語",
+            [nameof(Strings.French)] = "Français",
+            [nameof(Strings.Spanish)] = "Español",
+            [nameof(Strings.Portuguese)] = "Português",
+            [nameof(Strings.Chinese)] = "简体中文",
+            [nameof(Strings.Korean)] = "한국어"
+        };
+        foreach (var cultureName in new[] { "ru-RU", "en-US", "de-DE", "ja-JP", "fr-FR", "es-ES", "pt-PT", "zh-CN", "ko-KR" })
+        {
+            var culture = CultureInfo.GetCultureInfo(cultureName);
+            foreach (var (resourceKey, expectedLanguageName) in expectedLanguageNames)
+                Assert.Equal(expectedLanguageName, manager.GetString(resourceKey, culture));
+        }
     }
 }

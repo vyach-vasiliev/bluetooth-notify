@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="AppTitle" xml:space="preserve"><value>Bluetooth Notify</value></data>
+  <data name="Subtitle" xml:space="preserve"><value>配对设备的电池电量</value></data>
+  <data name="Open" xml:space="preserve"><value>打开</value></data>
+  <data name="Refresh" xml:space="preserve"><value>刷新</value></data>
+  <data name="Exit" xml:space="preserve"><value>退出</value></data>
+  <data name="Settings" xml:space="preserve"><value>设置</value></data>
+  <data name="SettingsDescription" xml:space="preserve"><value>语言、外观和通知</value></data>
+  <data name="Language" xml:space="preserve"><value>语言</value></data>
+  <data name="Theme" xml:space="preserve"><value>主题</value></data>
+  <data name="SystemDefault" xml:space="preserve"><value>使用系统设置</value></data>
+  <data name="EnglishUnitedStates" xml:space="preserve"><value>English (United States)</value></data>
+  <data name="Russian" xml:space="preserve"><value>Русский</value></data>
+  <data name="German" xml:space="preserve"><value>Deutsch</value></data>
+  <data name="Japanese" xml:space="preserve"><value>日本語</value></data>
+  <data name="French" xml:space="preserve"><value>Français</value></data>
+  <data name="Spanish" xml:space="preserve"><value>Español</value></data>
+  <data name="Portuguese" xml:space="preserve"><value>Português</value></data>
+  <data name="Chinese" xml:space="preserve"><value>简体中文</value></data>
+  <data name="Korean" xml:space="preserve"><value>한국어</value></data>
+  <data name="LightTheme" xml:space="preserve"><value>浅色</value></data>
+  <data name="DarkTheme" xml:space="preserve"><value>深色</value></data>
+  <data name="Back" xml:space="preserve"><value>返回</value></data>
+  <data name="Notifications" xml:space="preserve"><value>通知已关闭</value></data>
+  <data name="NotificationsEnabled" xml:space="preserve"><value>通知已开启</value></data>
+  <data name="Updated" xml:space="preserve"><value>更新时间：{0:HH:mm:ss}</value></data>
+  <data name="DevicesWithBattery" xml:space="preserve"><value>可显示电量的设备：{0}</value></data>
+  <data name="DeviceFallbackName" xml:space="preserve"><value>Bluetooth 设备</value></data>
+  <data name="Connected" xml:space="preserve"><value>已连接</value></data>
+  <data name="Disconnected" xml:space="preserve"><value>未连接</value></data>
+  <data name="BatteryUnavailable" xml:space="preserve"><value>无法获取电量</value></data>
+  <data name="BatteryStale" xml:space="preserve"><value>电量数据可能已过期</value></data>
+  <data name="DisconnectedBatteryStale" xml:space="preserve"><value>设备未连接。上次已知的电量：{0}%</value></data>
+  <data name="NoDevices" xml:space="preserve"><value>未找到已配对的 Bluetooth 设备</value></data>
+  <data name="BluetoothUnavailable" xml:space="preserve"><value>Bluetooth 已关闭或不可用</value></data>
+  <data name="PartialRefreshWarning" xml:space="preserve"><value>部分数据暂时不可用</value></data>
+  <data name="BatteryReadTimeout" xml:space="preserve"><value>设备未及时响应</value></data>
+  <data name="BatteryReadError" xml:space="preserve"><value>无法读取电量</value></data>
+  <data name="DeviceConnectedNotification" xml:space="preserve"><value>{0} 已连接</value></data>
+  <data name="BatteryNotification" xml:space="preserve"><value>电量：{0}%</value></data>
+  <data name="BatteryNotifications" xml:space="preserve"><value>电量通知</value></data>
+  <data name="BatteryNotificationsDescription" xml:space="preserve"><value>当已连接设备的电量降至所选水平时通知</value></data>
+  <data name="MediumBatteryLevel" xml:space="preserve"><value>中等电量</value></data>
+  <data name="MediumBatteryLevelDescription" xml:space="preserve"><value>提前提醒</value></data>
+  <data name="MediumBatteryThreshold" xml:space="preserve"><value>中等电量阈值</value></data>
+  <data name="MediumBatteryNotificationToggle" xml:space="preserve"><value>中等电量通知</value></data>
+  <data name="LowBatteryLevel" xml:space="preserve"><value>电量低</value></data>
+  <data name="LowBatteryLevelDescription" xml:space="preserve"><value>发出低电量警告</value></data>
+  <data name="LowBatteryThreshold" xml:space="preserve"><value>低电量阈值</value></data>
+  <data name="LowBatteryNotificationToggle" xml:space="preserve"><value>低电量通知</value></data>
+  <data name="MediumBatteryNotification" xml:space="preserve"><value>中等电量</value></data>
+  <data name="LowBatteryNotification" xml:space="preserve"><value>低电量</value></data>
+  <data name="StatusAutomationName" xml:space="preserve"><value>{0} 的状态</value></data>
+  <data name="Loading" xml:space="preserve"><value>正在更新数据</value></data>
+</root>
