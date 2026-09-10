@@ -30,7 +30,6 @@ public sealed class TrayIconService(AppLogger logger, AppThemePreference themePr
 
     public event EventHandler? OpenRequested;
     public event EventHandler? ToggleRequested;
-    public event EventHandler? RefreshRequested;
     public event EventHandler? SettingsRequested;
     public event EventHandler? ExitRequested;
     public event EventHandler? PointerEntered;
@@ -149,14 +148,12 @@ public sealed class TrayIconService(AppLogger logger, AppThemePreference themePr
         try
         {
             NativeMethods.AppendMenu(menu, NativeMethods.MF_STRING, 1, Properties.Strings.Open);
-            NativeMethods.AppendMenu(menu, NativeMethods.MF_STRING, 2, Properties.Strings.Refresh);
             NativeMethods.AppendMenu(menu, NativeMethods.MF_STRING, 4, Properties.Strings.Settings);
             NativeMethods.AppendMenu(menu, NativeMethods.MF_SEPARATOR, 0, null);
             NativeMethods.AppendMenu(menu, NativeMethods.MF_STRING, 3, Properties.Strings.Exit);
             NativeMethods.SetForegroundWindow(_source.Handle);
             var command = NativeMethods.TrackPopupMenuEx(menu, NativeMethods.TPM_RIGHTBUTTON | NativeMethods.TPM_RETURNCMD, point.X, point.Y, _source.Handle, 0);
             if (command == 1) OpenRequested?.Invoke(this, EventArgs.Empty);
-            else if (command == 2) RefreshRequested?.Invoke(this, EventArgs.Empty);
             else if (command == 4) SettingsRequested?.Invoke(this, EventArgs.Empty);
             else if (command == 3) ExitRequested?.Invoke(this, EventArgs.Empty);
         }

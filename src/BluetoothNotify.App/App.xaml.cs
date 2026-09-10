@@ -191,10 +191,6 @@ public partial class App : Application
         if (_tray is null) return;
         _tray.OpenRequested += (_, _) => ShowPanelActivated();
         _tray.ToggleRequested += (_, _) => { if (_window?.IsVisible == true) HidePanel(); else ShowPanelActivated(); };
-        _tray.RefreshRequested += async (_, _) =>
-        {
-            if (_viewModel is not null) await SafeRefreshAsync(true, false, _lifetime.Token);
-        };
         _tray.SettingsRequested += (_, _) =>
         {
             _viewModel?.OpenSettings();

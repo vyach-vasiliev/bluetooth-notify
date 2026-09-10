@@ -43,7 +43,6 @@ public interface ITrayIconService : IDisposable
 {
     event EventHandler? OpenRequested;
     event EventHandler? ToggleRequested;
-    event EventHandler? RefreshRequested;
     event EventHandler? SettingsRequested;
     event EventHandler? ExitRequested;
     event EventHandler? PointerEntered;

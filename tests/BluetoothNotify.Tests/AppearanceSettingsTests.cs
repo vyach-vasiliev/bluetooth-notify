@@ -71,15 +71,15 @@ public sealed class AppearanceSettingsTests
 
         var expectedLanguageNames = new Dictionary<string, string>
         {
-            [nameof(Strings.EnglishUnitedStates)] = "English (United States)",
-            [nameof(Strings.Russian)] = "Русский",
-            [nameof(Strings.German)] = "Deutsch",
-            [nameof(Strings.Japanese)] = "日本語",
-            [nameof(Strings.French)] = "Français",
-            [nameof(Strings.Spanish)] = "Español",
-            [nameof(Strings.Portuguese)] = "Português",
-            [nameof(Strings.Chinese)] = "简体中文",
-            [nameof(Strings.Korean)] = "한국어"
+            [nameof(Strings.EnglishUnitedStates)] = "English (English)",
+            [nameof(Strings.Russian)] = "Русский (Russian)",
+            [nameof(Strings.German)] = "Deutsch (German)",
+            [nameof(Strings.Japanese)] = "日本語 (Japanese)",
+            [nameof(Strings.French)] = "Français (French)",
+            [nameof(Strings.Spanish)] = "Español (Spanish)",
+            [nameof(Strings.Portuguese)] = "Português (Portuguese)",
+            [nameof(Strings.Chinese)] = "简体中文 (Chinese)",
+            [nameof(Strings.Korean)] = "한국어 (Korean)"
         };
         foreach (var cultureName in new[] { "ru-RU", "en-US", "de-DE", "ja-JP", "fr-FR", "es-ES", "pt-PT", "zh-CN", "ko-KR" })
         {
