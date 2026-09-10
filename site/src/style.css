@@ -111,6 +111,92 @@ button { cursor: pointer; }
 
 .brand-link:hover .brand-mark { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
 
+.header-actions { display: flex; min-width: 0; align-items: center; gap: 0.75rem; }
+
+.language-switcher { position: relative; }
+
+.language-trigger {
+  position: relative;
+  display: inline-flex;
+  min-width: 178px;
+  min-height: 48px;
+  align-items: center;
+  gap: 0.55rem;
+  border: 2px solid var(--ink);
+  background: white;
+  padding: 0.65rem 0.8rem;
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 800;
+  box-shadow: 4px 4px 0 var(--ink);
+  transition-property: transform, box-shadow, background-color;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+.language-trigger:hover { background: #e8ecff; transform: translate(1px, 1px); box-shadow: 3px 3px 0 var(--ink); }
+.language-trigger:active { transform: scale(0.96); }
+.language-trigger:focus-visible { outline: 3px solid var(--coral); outline-offset: 3px; }
+.language-trigger-open { background: var(--lime); transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+.language-trigger > svg { flex: 0 0 auto; }
+.language-label-full, .language-label-short { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.language-label-full { margin-right: auto; }
+.language-label-short { display: none; }
+.language-chevron { margin-left: 0.1rem; transition: transform 150ms cubic-bezier(0.2, 0, 0, 1); }
+.language-trigger-open .language-chevron { transform: rotate(180deg); }
+
+.language-menu {
+  position: absolute;
+  z-index: 60;
+  top: calc(100% + 10px);
+  right: -4px;
+  width: 256px;
+  max-height: min(70vh, 430px);
+  overflow-y: auto;
+  border: 2px solid var(--ink);
+  background: white;
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+.language-option {
+  display: grid;
+  width: 100%;
+  min-height: 46px;
+  align-items: center;
+  gap: 0.7rem;
+  border: 0;
+  border-bottom: 1px solid rgb(10 16 32 / 0.22);
+  background: white;
+  padding: 0.65rem 0.8rem;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  grid-template-columns: 2rem 1fr auto;
+  transition-property: background-color, color;
+  transition-duration: 120ms;
+}
+
+.language-option:last-child { border-bottom: 0; }
+.language-option:hover, .language-option:focus-visible { background: #e8ecff; outline: 0; }
+.language-option:focus-visible { box-shadow: inset 4px 0 0 var(--coral); }
+.language-option:active { transform: scale(0.96); }
+.language-option-selected, .language-option-selected:hover, .language-option-selected:focus-visible { background: var(--lime); }
+.language-option-code { color: #667089; font-size: 0.68rem; font-weight: 900; letter-spacing: 0.08em; }
+.language-option-name { font-size: 0.85rem; font-weight: 800; }
+.language-option-check { opacity: 1; filter: blur(0); transform: scale(1); transition: opacity 150ms cubic-bezier(0.2, 0, 0, 1), filter 150ms cubic-bezier(0.2, 0, 0, 1), transform 150ms cubic-bezier(0.2, 0, 0, 1); }
+.language-option-check-hidden { opacity: 0; filter: blur(4px); transform: scale(0.25); }
+
+.language-menu-enter-active, .language-menu-leave-active {
+  transform-origin: top right;
+  transition-property: opacity, transform;
+  transition-duration: 140ms;
+  transition-timing-function: ease-out;
+}
+
+.language-menu-leave-active { transition-duration: 100ms; }
+.language-menu-enter-from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+.language-menu-leave-to { opacity: 0; transform: translateY(-3px) scale(0.99); }
+
 .nav-block {
   display: inline-flex;
   min-height: 44px;
@@ -369,6 +455,11 @@ button { cursor: pointer; }
 
 @media (max-width: 639px) {
   .page-shell { width: min(100% - 1.25rem, 1180px); }
+  .header-actions { gap: 0.5rem; }
+  .language-trigger { min-width: 78px; min-height: 42px; justify-content: center; padding: 0.5rem 0.65rem; }
+  .language-label-full { display: none; }
+  .language-label-short { display: inline; }
+  .language-menu { position: fixed; top: 64px; right: 10px; left: 10px; width: auto; max-height: calc(100vh - 82px); }
   .header-cta { min-height: 42px; padding: 0.55rem 0.75rem; }
   .hero-section { padding-top: 8.5rem; }
   .hero-title { font-size: clamp(3rem, 16vw, 4.9rem); }
@@ -390,6 +481,10 @@ button { cursor: pointer; }
   .theme-sticker { right: 0; bottom: 3%; min-width: 225px; }
   .command-card { padding: 1rem; box-shadow: 8px 8px 0 var(--lime); }
   .background-signal { display: none; }
+}
+
+@media (max-width: 440px) {
+  .header-brand-name { display: none; }
 }
 
 @media (hover: none), (pointer: coarse) {

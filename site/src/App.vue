@@ -1,11 +1,12 @@
 <script setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import {
   ArrowRight,
   BatteryCharging,
   BellRing,
   Bluetooth,
   Check,
+  ChevronDown,
   ChevronRight,
   CircleCheck,
   Copy,
@@ -17,45 +18,48 @@ import {
   ShieldCheck,
   Sun,
 } from '@lucide/vue'
+import { localeOptions, resolveLocale, translations } from './i18n'
 
-const previews = [
-  {
-    id: 'panel',
-    label: '01 / Panel',
-    tag: 'Live status',
-    title: 'Every paired device in one clean view.',
-    description:
-      'See real connection state and the latest battery level Windows can report—without leaving your current task.',
-    image: '/screenshots/main_light.png',
-    alt: 'Bluetooth Notify light panel showing two paired headphones and their battery levels',
-  },
-  {
-    id: 'settings',
-    label: '02 / Settings',
-    tag: 'Your thresholds',
-    title: 'Useful alerts, tuned by you.',
-    description:
-      'Choose separate medium and low battery thresholds, switch notifications on or off, and apply changes instantly.',
-    image: '/screenshots/settings_light.png',
-    alt: 'Bluetooth Notify settings with language, theme, and battery notification controls',
-  },
-  {
-    id: 'dark',
-    label: '03 / Dark mode',
-    tag: 'System-aware',
-    title: 'Looks right in every Windows theme.',
-    description:
-      'Follow the system appearance or select light and dark mode yourself. The panel and tray icon stay easy to read.',
-    image: '/screenshots/main_dark.png',
-    alt: 'Bluetooth Notify panel in dark mode',
-  },
+const previewDetails = [
+  { id: 'panel', image: '/screenshots/main_light.png' },
+  { id: 'settings', image: '/screenshots/settings_light.png' },
+  { id: 'dark', image: '/screenshots/main_dark.png' },
 ]
 
+const requestedLocale = new URLSearchParams(window.location.search).get('lang')
+const initialLocale = [requestedLocale, ...(navigator.languages ?? [navigator.language])]
+  .map((value) => resolveLocale(value, null))
+  .find(Boolean) ?? 'en'
+
+const locale = ref(initialLocale)
 const activePreview = ref('panel')
 const copied = ref(false)
 const cursorAura = ref(null)
-const currentPreview = computed(() => previews.find((item) => item.id === activePreview.value))
+const languageSwitcher = ref(null)
+const languageTrigger = ref(null)
+const languageOptionElements = ref([])
+const languageMenuOpen = ref(false)
+const copy = computed(() => translations[locale.value])
+const currentLocale = computed(() => localeOptions.find((option) => option.code === locale.value))
+const currentLocaleIndex = computed(() => localeOptions.findIndex((option) => option.code === locale.value))
+const previews = computed(() => previewDetails.map((preview, index) => ({
+  ...preview,
+  ...copy.value.interface.previews[index],
+})))
+const currentPreview = computed(() => previews.value.find((item) => item.id === activePreview.value))
 const buildCommand = 'dotnet run --project .\\src\\BluetoothNotify.App\\BluetoothNotify.App.csproj -c Release'
+
+watch(locale, (value) => {
+  const selectedLocale = localeOptions.find((option) => option.code === value) ?? localeOptions[0]
+  document.documentElement.lang = selectedLocale.htmlLang
+  document.title = copy.value.meta.title
+  document.querySelector('meta[name="description"]')?.setAttribute('content', copy.value.meta.description)
+
+  const url = new URL(window.location.href)
+  url.searchParams.set('lang', value)
+  window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`)
+  copied.value = false
+}, { immediate: true })
 
 let cursorFrame = 0
 let pointerX = 0
@@ -80,6 +84,77 @@ function handlePointerOut(event) {
   if (!event.relatedTarget && cursorAura.value) cursorAura.value.style.opacity = '0'
 }
 
+function setLanguageOptionElement(element, index) {
+  if (element) languageOptionElements.value[index] = element
+}
+
+async function openLanguageMenu() {
+  languageMenuOpen.value = true
+  await nextTick()
+  languageOptionElements.value[Math.max(0, currentLocaleIndex.value)]?.focus()
+}
+
+async function closeLanguageMenu(restoreFocus = false) {
+  languageMenuOpen.value = false
+  if (restoreFocus) {
+    await nextTick()
+    languageTrigger.value?.focus()
+  }
+}
+
+function toggleLanguageMenu() {
+  if (languageMenuOpen.value) closeLanguageMenu()
+  else openLanguageMenu()
+}
+
+function selectLanguage(code) {
+  locale.value = code
+  closeLanguageMenu(true)
+}
+
+function moveLanguageFocus(offset) {
+  const focusedIndex = languageOptionElements.value.indexOf(document.activeElement)
+  const startIndex = focusedIndex >= 0 ? focusedIndex : Math.max(0, currentLocaleIndex.value)
+  const nextIndex = (startIndex + offset + localeOptions.length) % localeOptions.length
+  languageOptionElements.value[nextIndex]?.focus()
+}
+
+function handleLanguageMenuKeydown(event) {
+  if (event.key === 'ArrowDown') {
+    event.preventDefault()
+    moveLanguageFocus(1)
+  } else if (event.key === 'ArrowUp') {
+    event.preventDefault()
+    moveLanguageFocus(-1)
+  } else if (event.key === 'Home') {
+    event.preventDefault()
+    languageOptionElements.value[0]?.focus()
+  } else if (event.key === 'End') {
+    event.preventDefault()
+    languageOptionElements.value.at(-1)?.focus()
+  } else if (event.key === 'Escape') {
+    event.preventDefault()
+    closeLanguageMenu(true)
+  }
+}
+
+function handleLanguageTriggerKeydown(event) {
+  if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+    event.preventDefault()
+    openLanguageMenu()
+  }
+}
+
+function handleLanguageFocusOut() {
+  nextTick(() => {
+    if (!languageSwitcher.value?.contains(document.activeElement)) closeLanguageMenu()
+  })
+}
+
+function handleDocumentPointerDown(event) {
+  if (languageMenuOpen.value && !languageSwitcher.value?.contains(event.target)) closeLanguageMenu()
+}
+
 onMounted(() => {
   cursorEnabled = window.matchMedia('(hover: hover) and (pointer: fine)').matches
     && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -88,11 +163,13 @@ onMounted(() => {
     window.addEventListener('pointermove', handlePointerMove, { passive: true })
     window.addEventListener('pointerout', handlePointerOut)
   }
+  document.addEventListener('pointerdown', handleDocumentPointerDown)
 })
 
 onUnmounted(() => {
   window.removeEventListener('pointermove', handlePointerMove)
   window.removeEventListener('pointerout', handlePointerOut)
+  document.removeEventListener('pointerdown', handleDocumentPointerDown)
   if (cursorFrame) window.cancelAnimationFrame(cursorFrame)
 })
 
@@ -119,20 +196,76 @@ async function copyCommand() {
       <div class="page-shell flex h-18 items-center justify-between">
         <a href="#top" class="brand-link">
           <span class="brand-mark"><Bluetooth :size="21" :stroke-width="2" aria-hidden="true" /></span>
-          <span class="text-[15px] font-extrabold uppercase tracking-[-0.02em] sm:text-base">Bluetooth Notify</span>
+          <span class="header-brand-name text-[15px] font-extrabold uppercase tracking-[-0.02em] sm:text-base">Bluetooth Notify</span>
         </a>
 
-        <nav aria-label="Main navigation" class="hidden items-center gap-1 lg:flex">
-          <a class="nav-block" href="#features">Features</a>
-          <a class="nav-block" href="#interface">Interface</a>
-          <a class="nav-block" href="#requirements">Requirements</a>
+        <nav :aria-label="copy.navigationLabel" class="hidden items-center gap-1 lg:flex">
+          <a class="nav-block" href="#features">{{ copy.nav.features }}</a>
+          <a class="nav-block" href="#interface">{{ copy.nav.interface }}</a>
+          <a class="nav-block" href="#requirements">{{ copy.nav.requirements }}</a>
         </nav>
 
-        <a href="#build" class="header-cta">
-          <span class="hidden sm:inline">Build from source</span>
-          <span class="sm:hidden">Build</span>
-          <ArrowRight :size="17" :stroke-width="2" aria-hidden="true" />
-        </a>
+        <div class="header-actions">
+          <div ref="languageSwitcher" class="language-switcher" @focusout="handleLanguageFocusOut">
+            <button
+              ref="languageTrigger"
+              type="button"
+              class="language-trigger"
+              :class="{ 'language-trigger-open': languageMenuOpen }"
+              aria-haspopup="listbox"
+              aria-controls="language-menu"
+              :aria-expanded="languageMenuOpen"
+              :aria-label="`${copy.languageLabel}: ${currentLocale.label}`"
+              @click="toggleLanguageMenu"
+              @keydown="handleLanguageTriggerKeydown"
+            >
+              <Languages :size="17" :stroke-width="2" aria-hidden="true" />
+              <span class="language-label-full">{{ currentLocale.label }}</span>
+              <span class="language-label-short">{{ currentLocale.short }}</span>
+              <ChevronDown class="language-chevron" :size="16" :stroke-width="2" aria-hidden="true" />
+            </button>
+
+            <Transition name="language-menu">
+              <div
+                v-if="languageMenuOpen"
+                id="language-menu"
+                class="language-menu"
+                role="listbox"
+                :aria-label="copy.languageLabel"
+                @keydown="handleLanguageMenuKeydown"
+              >
+                <button
+                  v-for="(option, index) in localeOptions"
+                  :key="option.code"
+                  :ref="(element) => setLanguageOptionElement(element, index)"
+                  type="button"
+                  class="language-option"
+                  :class="{ 'language-option-selected': option.code === locale }"
+                  role="option"
+                  tabindex="-1"
+                  :aria-selected="option.code === locale"
+                  @click="selectLanguage(option.code)"
+                >
+                  <span class="language-option-code">{{ option.short }}</span>
+                  <span class="language-option-name">{{ option.label }}</span>
+                  <Check
+                    class="language-option-check"
+                    :class="{ 'language-option-check-hidden': option.code !== locale }"
+                    :size="18"
+                    :stroke-width="2.2"
+                    aria-hidden="true"
+                  />
+                </button>
+              </div>
+            </Transition>
+          </div>
+
+          <a href="#build" class="header-cta">
+            <span class="hidden sm:inline">{{ copy.header.build }}</span>
+            <span class="sm:hidden">{{ copy.header.buildShort }}</span>
+            <ArrowRight :size="17" :stroke-width="2" aria-hidden="true" />
+          </a>
+        </div>
       </div>
     </header>
 
@@ -142,29 +275,27 @@ async function copyCommand() {
           <div class="relative z-10 max-w-2xl">
             <div class="signal-label">
               <span class="signal-bars" aria-hidden="true"><i></i><i></i><i></i></span>
-              Windows 11 tray utility
+              {{ copy.hero.eyebrow }}
             </div>
 
             <h1 class="hero-title mt-7">
-              Battery status.<br />
-              <span class="hero-title-accent">Zero guesswork.</span>
+              {{ copy.hero.title[0] }}<br />
+              <span class="hero-title-accent">{{ copy.hero.title[1] }}</span>
             </h1>
             <p class="mt-7 max-w-xl text-pretty text-lg leading-8 text-slate-700 sm:text-xl">
-              Bluetooth Notify puts device levels, connection state, and native low-battery alerts exactly where they belong: in your system tray.
+              {{ copy.hero.description }}
             </p>
 
             <div class="mt-9 flex flex-col gap-3 sm:flex-row">
               <a href="#interface" class="action-primary">
-                Explore the interface
+                {{ copy.hero.explore }}
                 <ArrowRight :size="19" :stroke-width="2" aria-hidden="true" />
               </a>
-              <a href="#features" class="action-ghost">Why it helps</a>
+              <a href="#features" class="action-ghost">{{ copy.hero.why }}</a>
             </div>
 
             <div class="hero-meta mt-11">
-              <div><span>01</span>Native alerts</div>
-              <div><span>02</span>No account</div>
-              <div><span>03</span>EN + RU</div>
+              <div v-for="(item, index) in copy.hero.meta" :key="item"><span>0{{ index + 1 }}</span>{{ item }}</div>
             </div>
           </div>
 
@@ -172,16 +303,16 @@ async function copyCommand() {
             <div class="orbit orbit-one" aria-hidden="true"></div>
             <div class="orbit orbit-two" aria-hidden="true"></div>
             <div class="axis-mark axis-top" aria-hidden="true">BT / 90%</div>
-            <div class="axis-mark axis-bottom" aria-hidden="true">SIGNAL: LIVE</div>
+            <div class="axis-mark axis-bottom" aria-hidden="true">{{ copy.hero.signalLive }}</div>
 
             <div class="app-shot-card">
               <div class="shot-toolbar">
                 <span>BLUETOOTH_NOTIFY.EXE</span>
-                <span class="flex items-center gap-2"><i></i> LIVE</span>
+                <span class="flex items-center gap-2"><i></i> {{ copy.hero.live }}</span>
               </div>
               <img
                 src="/screenshots/main_light.png"
-                alt="Bluetooth Notify showing connected headphones with a 90 percent battery level"
+                :alt="copy.hero.mainAlt"
                 width="874"
                 height="746"
                 class="image-outline block w-full rounded-[10px]"
@@ -189,10 +320,10 @@ async function copyCommand() {
             </div>
 
             <div class="tray-cutout">
-              <span>One click away</span>
+              <span>{{ copy.hero.trayCaption }}</span>
               <img
                 src="/screenshots/tray_light.png"
-                alt="Bluetooth Notify icon in the Windows system tray"
+                :alt="copy.hero.trayAlt"
                 width="478"
                 height="92"
                 class="image-outline mt-2 block w-full rounded-md"
@@ -201,7 +332,7 @@ async function copyCommand() {
 
             <div class="charge-stamp">
               <span class="charge-stamp-number tabular-nums">90</span>
-              <span class="charge-stamp-copy">%<br />CHARGED</span>
+              <span class="charge-stamp-copy">%<br />{{ copy.hero.charged }}</span>
             </div>
           </div>
         </div>
@@ -209,33 +340,37 @@ async function copyCommand() {
 
       <div class="ticker" aria-hidden="true">
         <div class="ticker-track">
-          <span v-for="index in 8" :key="index">REAL BATTERY DATA <i>✦</i> NATIVE WINDOWS ALERTS <i>✦</i> ALWAYS IN THE TRAY <i>✦</i></span>
+          <span v-for="index in 8" :key="index">
+            <template v-for="(part, partIndex) in copy.ticker.split('✦')" :key="partIndex">
+              {{ part }}<i v-if="partIndex < copy.ticker.split('✦').length - 1">✦</i>
+            </template>
+          </span>
         </div>
       </div>
 
       <section id="features" class="section-block scroll-mt-20">
         <div class="page-shell">
           <div class="section-heading-grid">
-            <p class="section-index">[ 01 — FEATURES ]</p>
-            <h2 class="section-title">Small app.<br />Strong signal.</h2>
+            <p class="section-index">{{ copy.features.index }}</p>
+            <h2 class="section-title">{{ copy.features.title[0] }}<br />{{ copy.features.title[1] }}</h2>
             <p class="section-intro">
-              A focused native companion that stays quiet until you need it—then tells you exactly what Windows knows.
+              {{ copy.features.intro }}
             </p>
           </div>
 
           <div class="feature-grid mt-16">
             <article class="feature-block feature-blue">
               <div class="feature-topline"><span>01</span><Eye :size="25" :stroke-width="1.8" aria-hidden="true" /></div>
-              <h3>One-click overview</h3>
-              <p>Paired devices, current connection state, and the latest available battery reading in a compact panel.</p>
-              <div class="feature-foot">Refreshes while open <ArrowRight :size="17" aria-hidden="true" /></div>
+              <h3>{{ copy.features.overview.title }}</h3>
+              <p>{{ copy.features.overview.body }}</p>
+              <div class="feature-foot">{{ copy.features.overview.foot }} <ArrowRight :size="17" aria-hidden="true" /></div>
             </article>
 
             <article class="feature-block feature-lime">
               <div class="feature-topline"><span>02</span><BellRing :size="25" :stroke-width="1.8" aria-hidden="true" /></div>
-              <h3>Threshold alerts</h3>
-              <p>Set separate medium and low levels. Each warning fires once as the device crosses your threshold.</p>
-              <div class="level-meter" aria-label="Example battery level at 30 percent">
+              <h3>{{ copy.features.alerts.title }}</h3>
+              <p>{{ copy.features.alerts.body }}</p>
+              <div class="level-meter" :aria-label="copy.features.alerts.meterLabel">
                 <div class="level-fill"></div>
                 <span class="tabular-nums">30%</span>
               </div>
@@ -243,9 +378,9 @@ async function copyCommand() {
 
             <article class="feature-block feature-white">
               <div class="feature-topline"><span>03</span><Monitor :size="25" :stroke-width="1.8" aria-hidden="true" /></div>
-              <h3>Native behavior</h3>
-              <p>Hover or click to open, use the tray menu, and receive standard Windows app notifications.</p>
-              <div class="feature-foot"><ShieldCheck :size="17" aria-hidden="true" /> Settings stay local</div>
+              <h3>{{ copy.features.native.title }}</h3>
+              <p>{{ copy.features.native.body }}</p>
+              <div class="feature-foot"><ShieldCheck :size="17" aria-hidden="true" /> {{ copy.features.native.foot }}</div>
             </article>
           </div>
         </div>
@@ -254,13 +389,13 @@ async function copyCommand() {
       <section id="interface" class="interface-section scroll-mt-18">
         <div class="page-shell">
           <div class="section-heading-grid section-heading-light">
-            <p class="section-index">[ 02 — INTERFACE ]</p>
-            <h2 class="section-title">Three views.<br />No clutter.</h2>
-            <p class="section-intro">Switch between the live panel, notification settings, and the system-aware dark appearance.</p>
+            <p class="section-index">{{ copy.interface.index }}</p>
+            <h2 class="section-title">{{ copy.interface.title[0] }}<br />{{ copy.interface.title[1] }}</h2>
+            <p class="section-intro">{{ copy.interface.intro }}</p>
           </div>
 
           <div class="interface-console mt-14">
-            <div class="preview-menu" role="tablist" aria-label="App screenshots">
+            <div class="preview-menu" role="tablist" :aria-label="copy.interface.tabsLabel">
               <button
                 v-for="preview in previews"
                 :key="preview.id"
@@ -283,9 +418,9 @@ async function copyCommand() {
               </div>
 
               <div class="theme-badges">
-                <span><Sun :size="16" aria-hidden="true" /> Light</span>
-                <span><Moon :size="16" aria-hidden="true" /> Dark</span>
-                <span><Languages :size="16" aria-hidden="true" /> 9 Languages</span>
+                <span><Sun :size="16" aria-hidden="true" /> {{ copy.interface.light }}</span>
+                <span><Moon :size="16" aria-hidden="true" /> {{ copy.interface.dark }}</span>
+                <span><Languages :size="16" aria-hidden="true" /> {{ copy.interface.languages }}</span>
               </div>
             </div>
 
@@ -310,34 +445,34 @@ async function copyCommand() {
       <section id="requirements" class="section-block scroll-mt-20">
         <div class="page-shell grid items-center gap-16 lg:grid-cols-[0.85fr_1.15fr]">
           <div>
-            <p class="section-index">[ 03 — SYSTEM ]</p>
-            <h2 class="section-title mt-6">At home on Windows.</h2>
+            <p class="section-index">{{ copy.requirements.index }}</p>
+            <h2 class="section-title mt-6">{{ copy.requirements.title }}</h2>
             <p class="mt-6 max-w-xl text-pretty text-lg leading-8 text-slate-700">
-              Bluetooth Notify reads standard Windows device data and uses native tray behavior. This framework-dependent build requires both runtimes below before first launch.
+              {{ copy.requirements.description }}
             </p>
 
             <div class="requirement-list mt-10">
-              <div><CircleCheck aria-hidden="true" /><span>Windows 11 22H2 or newer</span><b>x64</b></div>
+              <div><CircleCheck aria-hidden="true" /><span>{{ copy.requirements.windows }}</span><b>x64</b></div>
               <div>
                 <CircleCheck aria-hidden="true" />
                 <span>.NET Desktop Runtime 10 x64</span>
-                <a href="https://dotnet.microsoft.com/en-us/download/dotnet/10.0" target="_blank" rel="noreferrer">Download ↗</a>
+                <a href="https://dotnet.microsoft.com/en-us/download/dotnet/10.0" target="_blank" rel="noreferrer">{{ copy.requirements.download }}</a>
               </div>
               <div>
                 <CircleCheck aria-hidden="true" />
                 <span>Windows App Runtime 1.8 x64</span>
-                <a href="https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/downloads-archive#version-18" target="_blank" rel="noreferrer">Download ↗</a>
+                <a href="https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/downloads-archive#version-18" target="_blank" rel="noreferrer">{{ copy.requirements.download }}</a>
               </div>
             </div>
           </div>
 
           <div class="settings-rig">
-            <div class="settings-backdrop" aria-hidden="true">SYSTEM<br />READY</div>
+            <div class="settings-backdrop" aria-hidden="true">{{ copy.requirements.ready[0] }}<br />{{ copy.requirements.ready[1] }}</div>
             <div class="settings-shot">
-              <div class="shot-toolbar"><span>SETTINGS / APPEARANCE</span><span>03</span></div>
+              <div class="shot-toolbar"><span>{{ copy.requirements.toolbar }}</span><span>03</span></div>
               <img
                 src="/screenshots/settings_light.png"
-                alt="Bluetooth Notify light appearance settings"
+                :alt="copy.requirements.settingsAlt"
                 width="880"
                 height="884"
                 class="image-outline block w-full rounded-[10px]"
@@ -345,7 +480,7 @@ async function copyCommand() {
             </div>
             <div class="theme-sticker">
               <Settings2 :size="22" aria-hidden="true" />
-              <div><strong>Theme-aware</strong><span>Light / Dark / System</span></div>
+              <div><strong>{{ copy.requirements.themeAware }}</strong><span>{{ copy.requirements.themes }}</span></div>
             </div>
           </div>
         </div>
@@ -356,22 +491,22 @@ async function copyCommand() {
           <div class="build-layout">
             <div>
               <div class="build-icon"><BatteryCharging :size="27" :stroke-width="1.8" aria-hidden="true" /></div>
-              <p class="section-index mt-7 text-blue-200">[ 04 — RUN IT ]</p>
-              <h2 class="build-title mt-5">Ready to keep<br />an eye on it?</h2>
+              <p class="section-index mt-7 text-blue-200">{{ copy.build.index }}</p>
+              <h2 class="build-title mt-5">{{ copy.build.title[0] }}<br />{{ copy.build.title[1] }}</h2>
               <p class="mt-6 max-w-xl text-pretty text-lg leading-8 text-blue-100/80">
-                The installer checks both prerequisites and opens the official Microsoft download page if either one is missing. Developers can also launch the app from source.
+                {{ copy.build.description }}
               </p>
             </div>
 
             <div class="command-card">
-              <div class="command-label"><span>POWERSHELL</span><span>01 LINE</span></div>
+              <div class="command-label"><span>POWERSHELL</span><span>{{ copy.build.line }}</span></div>
               <code>{{ buildCommand }}</code>
-              <button type="button" class="copy-command" :aria-label="copied ? 'Command copied' : 'Copy build command'" @click="copyCommand">
+              <button type="button" class="copy-command" :aria-label="copied ? copy.build.copiedAria : copy.build.copyAria" @click="copyCommand">
                 <span class="copy-icon-stack" aria-hidden="true">
                   <Copy :class="{ 'copy-icon-hidden': copied }" :size="19" />
                   <Check :class="{ 'copy-icon-hidden': !copied }" class="absolute" :size="19" />
                 </span>
-                {{ copied ? 'Copied' : 'Copy command' }}
+                {{ copied ? copy.build.copied : copy.build.copy }}
               </button>
             </div>
           </div>
