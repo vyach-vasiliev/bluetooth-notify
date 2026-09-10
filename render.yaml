@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: bluetooth-notify
+    runtime: static
+    rootDir: site
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    autoDeployTrigger: commit
