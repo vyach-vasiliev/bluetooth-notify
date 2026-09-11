@@ -79,6 +79,19 @@ english.CloseApplicationFailed=Bluetooth Notify is still running. Exit it from t
 russian.CloseApplicationFailed=Bluetooth Notify всё ещё запущен. Завершите его через значок в трее и повторите попытку.
 english.RemoveUserData=Also remove your Bluetooth Notify settings and logs?%n%nChoose No to keep them for a future installation.
 russian.RemoveUserData=Также удалить настройки и журналы Bluetooth Notify?%n%nВыберите «Нет», чтобы сохранить их для будущей установки.
+english.StartupTasks=Startup:
+russian.StartupTasks=Автозагрузка:
+english.StartWithWindows=Start Bluetooth Notify with Windows
+russian.StartWithWindows=Запускать Bluetooth Notify вместе с Windows
+
+[Tasks]
+Name: "startup"; Description: "{cm:StartWithWindows}"; GroupDescription: "{cm:StartupTasks}"
+
+[Registry]
+Root: HKCU; Subkey: "Software\BluetoothNotify"; ValueType: dword; ValueName: "RunAtStartup"; ValueData: "1"; Flags: uninsdeletevalue uninsdeletekeyifempty; Tasks: startup
+Root: HKCU; Subkey: "Software\BluetoothNotify"; ValueType: dword; ValueName: "RunAtStartup"; ValueData: "0"; Flags: uninsdeletevalue uninsdeletekeyifempty; Tasks: not startup
+Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "{#AppName}"; ValueData: """{app}\{#AppExeName}"" --autostart"; Flags: uninsdeletevalue; Tasks: startup
+Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: none; ValueName: "{#AppName}"; Flags: deletevalue; Tasks: not startup
 
 [Files]
 Source: "{#PublishDir}\*"; DestDir: "{app}"; Excludes: "*.pdb"; Flags: ignoreversion recursesubdirs createallsubdirs
@@ -99,6 +112,25 @@ const
 
 var
   RemoveUserData: Boolean;
+
+function ShouldEnableStartup: Boolean;
+var
+  Enabled: Cardinal;
+begin
+  if RegQueryDWordValue(HKCU, 'Software\BluetoothNotify',
+    'RunAtStartup', Enabled) then
+    Result := Enabled <> 0
+  else
+    Result := True;
+end;
+
+procedure InitializeWizard;
+begin
+  if ShouldEnableStartup then
+    WizardSelectTasks('startup')
+  else
+    WizardSelectTasks('!startup');
+end;
 
 function HasDotNetDesktopRuntime: Boolean;
 var
@@ -251,6 +283,17 @@ begin
   RemoveUserData := DirExists(ExpandConstant('{localappdata}\BluetoothNotify')) and
     (SuppressibleMsgBox(CustomMessage('RemoveUserData'), mbConfirmation,
       MB_YESNO, IDNO) = IDYES);
+end;
+
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+begin
+  if CurUninstallStep = usUninstall then
+  begin
+    RegDeleteValue(HKCU, 'Software\Microsoft\Windows\CurrentVersion\Run',
+      '{#AppName}');
+    RegDeleteValue(HKCU, 'Software\BluetoothNotify', 'RunAtStartup');
+    RegDeleteKeyIfEmpty(HKCU, 'Software\BluetoothNotify');
+  end;
 end;
 
 function ShouldRemoveUserData: Boolean;

@@ -39,6 +39,12 @@ public interface ISettingsStore
     Task SaveAsync(AppSettings settings, CancellationToken cancellationToken = default);
 }
 
+public interface IStartupRegistrationService
+{
+    bool IsEnabled();
+    void SetEnabled(bool enabled);
+}
+
 public interface ITrayIconService : IDisposable
 {
     event EventHandler? OpenRequested;

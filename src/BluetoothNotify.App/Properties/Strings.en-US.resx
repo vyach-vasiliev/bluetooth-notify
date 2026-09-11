@@ -10,9 +10,12 @@
   <data name="Refresh" xml:space="preserve"><value>Refresh</value></data>
   <data name="Exit" xml:space="preserve"><value>Exit</value></data>
   <data name="Settings" xml:space="preserve"><value>Settings</value></data>
-  <data name="SettingsDescription" xml:space="preserve"><value>Language, appearance, and notifications</value></data>
+  <data name="SettingsDescription" xml:space="preserve"><value>Language, appearance, startup, and notifications</value></data>
   <data name="Language" xml:space="preserve"><value>Language</value></data>
   <data name="Theme" xml:space="preserve"><value>Theme</value></data>
+  <data name="RunAtStartup" xml:space="preserve"><value>Start with Windows</value></data>
+  <data name="RunAtStartupDescription" xml:space="preserve"><value>Automatically start the app after you sign in</value></data>
+  <data name="StartupSettingError" xml:space="preserve"><value>Could not change the startup setting</value></data>
   <data name="SystemDefault" xml:space="preserve"><value>Use system setting</value></data>
   <data name="EnglishUnitedStates" xml:space="preserve"><value>English (English)</value></data>
   <data name="Russian" xml:space="preserve"><value>Русский (Russian)</value></data>

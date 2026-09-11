@@ -20,6 +20,9 @@ public static class Strings
     public static string SettingsDescription => Get(nameof(SettingsDescription));
     public static string Language => Get(nameof(Language));
     public static string Theme => Get(nameof(Theme));
+    public static string RunAtStartup => Get(nameof(RunAtStartup));
+    public static string RunAtStartupDescription => Get(nameof(RunAtStartupDescription));
+    public static string StartupSettingError => Get(nameof(StartupSettingError));
     public static string SystemDefault => Get(nameof(SystemDefault));
     public static string EnglishUnitedStates => Get(nameof(EnglishUnitedStates));
     public static string Russian => Get(nameof(Russian));

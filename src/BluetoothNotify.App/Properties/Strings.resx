@@ -10,9 +10,12 @@
   <data name="Refresh" xml:space="preserve"><value>Обновить</value></data>
   <data name="Exit" xml:space="preserve"><value>Выход</value></data>
   <data name="Settings" xml:space="preserve"><value>Настройки</value></data>
-  <data name="SettingsDescription" xml:space="preserve"><value>Язык, оформление и уведомления</value></data>
+  <data name="SettingsDescription" xml:space="preserve"><value>Язык, оформление, автозапуск и уведомления</value></data>
   <data name="Language" xml:space="preserve"><value>Язык</value></data>
   <data name="Theme" xml:space="preserve"><value>Тема</value></data>
+  <data name="RunAtStartup" xml:space="preserve"><value>Запускать вместе с Windows</value></data>
+  <data name="RunAtStartupDescription" xml:space="preserve"><value>Автоматически запускать приложение после входа в систему</value></data>
+  <data name="StartupSettingError" xml:space="preserve"><value>Не удалось изменить настройку автозапуска</value></data>
   <data name="SystemDefault" xml:space="preserve"><value>Как в системе</value></data>
   <data name="EnglishUnitedStates" xml:space="preserve"><value>English (English)</value></data>
   <data name="Russian" xml:space="preserve"><value>Русский (Russian)</value></data>

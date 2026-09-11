@@ -210,6 +210,17 @@
                                       SelectedValue="{Binding ThemePreference, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{x:Static p:Strings.Theme}" />
                         </Grid>
                     </Border>
+                    <Border Background="{DynamicResource Surface.Background}" BorderBrush="{DynamicResource Card.Border}" BorderThickness="1" CornerRadius="14" Padding="16" Margin="0,10,0,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
+                                <TextBlock Text="{x:Static p:Strings.RunAtStartup}" FontWeight="SemiBold" />
+                                <TextBlock Text="{x:Static p:Strings.RunAtStartupDescription}" Foreground="{DynamicResource Text.Secondary}" FontSize="11" Margin="0,2,0,0" TextWrapping="Wrap" />
+                            </StackPanel>
+                            <ToggleButton Grid.Column="1" Style="{StaticResource SettingsSwitch}" IsChecked="{Binding RunAtStartup, Mode=TwoWay}"
+                                          ToolTip="{x:Static p:Strings.RunAtStartup}" AutomationProperties.Name="{x:Static p:Strings.RunAtStartup}" />
+                        </Grid>
+                    </Border>
 
                     <StackPanel Margin="4,20,4,9">
                         <TextBlock Text="{x:Static p:Strings.BatteryNotifications}" FontWeight="SemiBold" FontSize="14" />

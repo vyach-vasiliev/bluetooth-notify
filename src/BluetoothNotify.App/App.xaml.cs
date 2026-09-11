@@ -79,7 +79,12 @@ public partial class App : Application
             _monitor = new BluetoothDeviceMonitor(_battery, _logger);
             _notifications = new NotificationService(_logger);
             _notifications.Initialize();
-            _viewModel = new TrayPanelViewModel(_monitor, settingsStore, new DeviceIconResolver(), Dispatcher);
+            _viewModel = new TrayPanelViewModel(
+                _monitor,
+                settingsStore,
+                new StartupRegistrationService(),
+                new DeviceIconResolver(),
+                Dispatcher);
             _viewModel.Initialize(initialSettings);
             _viewModel.ExitRequested += (_, _) => ExitApplication();
             _viewModel.PreferencesChanged += OnPreferencesChanged;

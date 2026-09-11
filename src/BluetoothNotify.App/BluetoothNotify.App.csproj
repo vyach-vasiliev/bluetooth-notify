@@ -19,6 +19,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.WindowsAppSDK" />
+    <InternalsVisibleTo Include="BluetoothNotify.Tests" />
   </ItemGroup>
   <ItemGroup>
     <Resource Remove="Assets/BluetoothNotify.Notification.png" />

@@ -10,9 +10,12 @@
   <data name="Refresh" xml:space="preserve"><value>새로 고침</value></data>
   <data name="Exit" xml:space="preserve"><value>종료</value></data>
   <data name="Settings" xml:space="preserve"><value>설정</value></data>
-  <data name="SettingsDescription" xml:space="preserve"><value>언어, 모양 및 알림</value></data>
+  <data name="SettingsDescription" xml:space="preserve"><value>언어, 모양, 시작 및 알림</value></data>
   <data name="Language" xml:space="preserve"><value>언어</value></data>
   <data name="Theme" xml:space="preserve"><value>테마</value></data>
+  <data name="RunAtStartup" xml:space="preserve"><value>Windows 시작 시 실행</value></data>
+  <data name="RunAtStartupDescription" xml:space="preserve"><value>로그인 후 앱을 자동으로 시작합니다</value></data>
+  <data name="StartupSettingError" xml:space="preserve"><value>시작 설정을 변경할 수 없습니다</value></data>
   <data name="SystemDefault" xml:space="preserve"><value>시스템 설정 사용</value></data>
   <data name="EnglishUnitedStates" xml:space="preserve"><value>English (English)</value></data>
   <data name="Russian" xml:space="preserve"><value>Русский (Russian)</value></data>

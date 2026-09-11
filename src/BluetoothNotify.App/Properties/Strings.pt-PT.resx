@@ -10,9 +10,12 @@
   <data name="Refresh" xml:space="preserve"><value>Atualizar</value></data>
   <data name="Exit" xml:space="preserve"><value>Sair</value></data>
   <data name="Settings" xml:space="preserve"><value>Definições</value></data>
-  <data name="SettingsDescription" xml:space="preserve"><value>Idioma, aspeto e notificações</value></data>
+  <data name="SettingsDescription" xml:space="preserve"><value>Idioma, aspeto, arranque e notificações</value></data>
   <data name="Language" xml:space="preserve"><value>Idioma</value></data>
   <data name="Theme" xml:space="preserve"><value>Tema</value></data>
+  <data name="RunAtStartup" xml:space="preserve"><value>Iniciar com o Windows</value></data>
+  <data name="RunAtStartupDescription" xml:space="preserve"><value>Iniciar automaticamente a aplicação após o início de sessão</value></data>
+  <data name="StartupSettingError" xml:space="preserve"><value>Não foi possível alterar a definição de arranque</value></data>
   <data name="SystemDefault" xml:space="preserve"><value>Utilizar a definição do sistema</value></data>
   <data name="EnglishUnitedStates" xml:space="preserve"><value>English (English)</value></data>
   <data name="Russian" xml:space="preserve"><value>Русский (Russian)</value></data>

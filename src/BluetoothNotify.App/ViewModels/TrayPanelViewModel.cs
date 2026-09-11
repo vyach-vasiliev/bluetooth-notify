@@ -28,6 +28,7 @@ public sealed class TrayPanelViewModel : ObservableObject
 {
     private readonly IBluetoothDeviceMonitor _monitor;
     private readonly ISettingsStore _settingsStore;
+    private readonly IStartupRegistrationService _startupRegistration;
     private readonly IDeviceIconResolver _icons;
     private readonly Dispatcher _dispatcher;
     private readonly AsyncRefreshGate _refreshGate = new();
@@ -47,15 +48,22 @@ public sealed class TrayPanelViewModel : ObservableObject
     private bool _isSettingsOpen;
     private AppLanguagePreference _languagePreference;
     private AppThemePreference _themePreference;
+    private bool _runAtStartup;
     private bool _mediumBatteryNotificationEnabled = true;
     private int _mediumBatteryThresholdPercent = 30;
     private bool _lowBatteryNotificationEnabled = true;
     private int _lowBatteryThresholdPercent = 15;
 
-    public TrayPanelViewModel(IBluetoothDeviceMonitor monitor, ISettingsStore settingsStore, IDeviceIconResolver icons, Dispatcher dispatcher)
+    public TrayPanelViewModel(
+        IBluetoothDeviceMonitor monitor,
+        ISettingsStore settingsStore,
+        IStartupRegistrationService startupRegistration,
+        IDeviceIconResolver icons,
+        Dispatcher dispatcher)
     {
         _monitor = monitor;
         _settingsStore = settingsStore;
+        _startupRegistration = startupRegistration;
         _icons = icons;
         _dispatcher = dispatcher;
         RefreshCommand = new AsyncCommand(() => RefreshAsync(true, false));
@@ -136,6 +144,26 @@ public sealed class TrayPanelViewModel : ObservableObject
             _ = PersistSettingsAsync(true);
         }
     }
+    public bool RunAtStartup
+    {
+        get => _runAtStartup;
+        set
+        {
+            var previous = _runAtStartup;
+            if (!SetProperty(ref _runAtStartup, value)) return;
+
+            try
+            {
+                _startupRegistration.SetEnabled(value);
+            }
+            catch
+            {
+                _runAtStartup = previous;
+                OnPropertyChanged();
+                Warning = Properties.Strings.StartupSettingError;
+            }
+        }
+    }
     public bool MediumBatteryNotificationEnabled
     {
         get => _mediumBatteryNotificationEnabled;
@@ -214,6 +242,15 @@ public sealed class TrayPanelViewModel : ObservableObject
         _notificationsEnabled = settings.NotificationsEnabled;
         _languagePreference = settings.Language;
         _themePreference = settings.Theme;
+        try
+        {
+            _runAtStartup = _startupRegistration.IsEnabled();
+        }
+        catch
+        {
+            _runAtStartup = false;
+            Warning = Properties.Strings.StartupSettingError;
+        }
         _mediumBatteryNotificationEnabled = settings.MediumBatteryNotificationEnabled;
         _mediumBatteryThresholdPercent = settings.MediumBatteryThresholdPercent;
         _lowBatteryNotificationEnabled = settings.LowBatteryNotificationEnabled;
@@ -223,6 +260,7 @@ public sealed class TrayPanelViewModel : ObservableObject
         OnPropertyChanged(nameof(NotificationsIconGlyph));
         OnPropertyChanged(nameof(LanguagePreference));
         OnPropertyChanged(nameof(ThemePreference));
+        OnPropertyChanged(nameof(RunAtStartup));
         OnPropertyChanged(nameof(MediumBatteryNotificationEnabled));
         OnPropertyChanged(nameof(MediumBatteryThresholdPercent));
         OnPropertyChanged(nameof(LowBatteryNotificationEnabled));
