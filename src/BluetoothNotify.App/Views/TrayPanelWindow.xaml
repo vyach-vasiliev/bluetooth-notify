@@ -23,6 +23,43 @@
                 <Setter.Value><ControlTemplate TargetType="ListBoxItem"><ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" /></ControlTemplate></Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="SettingsFooterLink" TargetType="Button">
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Padding" Value="2,0" />
+            <Setter Property="Foreground" Value="{DynamicResource Text.Secondary}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid x:Name="HitArea" Background="Transparent">
+                            <ContentPresenter x:Name="LinkContent" Margin="{TemplateBinding Padding}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            <Line x:Name="DottedUnderline" X1="0" Y1="0" X2="{Binding ActualWidth, ElementName=LinkContent}" Y2="0" Height="1" Margin="2,0,0,4"
+                                  HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                                  Stroke="{TemplateBinding Foreground}" StrokeThickness="1" StrokeDashArray="1,2" Opacity="0.55" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="{DynamicResource Accent.Brush}" />
+                                <Setter TargetName="DottedUnderline" Property="Opacity" Value="1" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="HitArea" Property="Opacity" Value="0.7" />
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter Property="Foreground" Value="{DynamicResource Accent.Brush}" />
+                                <Setter TargetName="DottedUnderline" Property="StrokeThickness" Value="2" />
+                                <Setter TargetName="DottedUnderline" Property="Opacity" Value="1" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <!-- DWM clips and rounds the real window. A second rounded WPF border here produced
@@ -215,18 +252,27 @@
                         </Grid>
                     </Border>
 
-                    <StackPanel Margin="4,20,4,9">
-                        <TextBlock Text="{x:Static p:Strings.LegalInformation}" FontWeight="SemiBold" FontSize="14" />
-                        <TextBlock Text="{x:Static p:Strings.LegalInformationDescription}" Foreground="{DynamicResource Text.Secondary}" FontSize="12" Margin="0,3,0,0" TextWrapping="Wrap" />
+                    <StackPanel Margin="4,14,4,0">
+                        <Line X1="0" Y1="0" X2="1" Y2="0" Height="1" HorizontalAlignment="Stretch" Stretch="Fill"
+                              Stroke="{DynamicResource Card.Border}" StrokeThickness="1" StrokeDashArray="2,3" />
+                        <Grid Margin="0,3,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" HorizontalAlignment="Left">
+                                <Button Style="{StaticResource SettingsFooterLink}" Command="{Binding OpenPrivacyPolicyCommand}"
+                                        Content="{x:Static p:Strings.PrivacyPolicy}" AutomationProperties.Name="{x:Static p:Strings.PrivacyPolicy}" />
+                                <Button Style="{StaticResource SettingsFooterLink}" Command="{Binding OpenTermsCommand}"
+                                        Content="{x:Static p:Strings.TermsOfUse}" AutomationProperties.Name="{x:Static p:Strings.TermsOfUse}" />
+                                <Button Style="{StaticResource SettingsFooterLink}" Command="{Binding OpenDisclaimerCommand}"
+                                        Content="{x:Static p:Strings.Disclaimer}" AutomationProperties.Name="{x:Static p:Strings.Disclaimer}" />
+                            </StackPanel>
+                            <Button Grid.Column="1" Style="{StaticResource SettingsFooterLink}" Command="{Binding OpenGitHubCommand}"
+                                    Content="© 2026 · GitHub" AutomationProperties.Name="© 2026 · GitHub"
+                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        </Grid>
                     </StackPanel>
-
-                    <Border Background="{DynamicResource Surface.Background}" BorderBrush="{DynamicResource Card.Border}" BorderThickness="1" CornerRadius="14" Padding="8">
-                        <WrapPanel HorizontalAlignment="Left">
-                            <Button Style="{StaticResource TextButton}" Command="{Binding OpenPrivacyPolicyCommand}" Content="{x:Static p:Strings.PrivacyPolicy}" AutomationProperties.Name="{x:Static p:Strings.PrivacyPolicy}" Margin="0,0,4,4" />
-                            <Button Style="{StaticResource TextButton}" Command="{Binding OpenTermsCommand}" Content="{x:Static p:Strings.TermsOfUse}" AutomationProperties.Name="{x:Static p:Strings.TermsOfUse}" Margin="0,0,4,4" />
-                            <Button Style="{StaticResource TextButton}" Command="{Binding OpenDisclaimerCommand}" Content="{x:Static p:Strings.Disclaimer}" AutomationProperties.Name="{x:Static p:Strings.Disclaimer}" Margin="0,0,4,4" />
-                        </WrapPanel>
-                    </Border>
                 </StackPanel>
                 </ScrollViewer>
             </Grid>

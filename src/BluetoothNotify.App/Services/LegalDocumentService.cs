@@ -5,10 +5,16 @@ namespace BluetoothNotify.App.Services;
 
 public static class LegalDocumentService
 {
+    public static Uri PublishedLegalPageUri { get; } =
+        new("https://bluetooth-notify.onrender.com/legal/");
+
+    public static Uri ProjectRepositoryUri { get; } =
+        new("https://github.com/vyach-vasiliev/bluetooth-notify/");
+
     private static readonly HashSet<string> SupportedLanguages =
         new(StringComparer.OrdinalIgnoreCase) { "en", "ru", "de", "fr", "es", "pt", "ja", "ko", "zh" };
 
-    public static Uri BuildDocumentUri(string section, CultureInfo? culture = null, string? baseDirectory = null)
+    public static Uri BuildDocumentUri(string section, CultureInfo? culture = null)
     {
         var normalizedSection = section.ToLowerInvariant() switch
         {
@@ -20,8 +26,7 @@ public static class LegalDocumentService
         var language = (culture ?? CultureInfo.CurrentUICulture).TwoLetterISOLanguageName;
         if (!SupportedLanguages.Contains(language)) language = "en";
 
-        var path = Path.Combine(baseDirectory ?? AppContext.BaseDirectory, "Legal", "index.html");
-        var builder = new UriBuilder(new Uri(path))
+        var builder = new UriBuilder(PublishedLegalPageUri)
         {
             Query = $"lang={language}",
             Fragment = normalizedSection
@@ -34,7 +39,20 @@ public static class LegalDocumentService
         try
         {
             var uri = BuildDocumentUri(section);
-            if (!File.Exists(uri.LocalPath)) return false;
+            return TryOpenUri(uri);
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    public static bool TryOpenProjectRepository() => TryOpenUri(ProjectRepositoryUri);
+
+    private static bool TryOpenUri(Uri uri)
+    {
+        try
+        {
             Process.Start(new ProcessStartInfo(uri.AbsoluteUri) { UseShellExecute = true });
             return true;
         }

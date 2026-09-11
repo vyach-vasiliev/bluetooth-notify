@@ -15,12 +15,13 @@ public sealed class LegalDocumentServiceTests
     {
         var uri = LegalDocumentService.BuildDocumentUri(
             "privacy",
-            CultureInfo.GetCultureInfo(cultureName),
-            Path.Combine(Path.GetTempPath(), "BluetoothNotify-Legal-Test"));
+            CultureInfo.GetCultureInfo(cultureName));
 
+        Assert.Equal("https", uri.Scheme);
+        Assert.Equal("bluetooth-notify.onrender.com", uri.Host);
+        Assert.Equal("/legal/", uri.AbsolutePath);
         Assert.Equal($"?lang={expectedLanguage}", uri.Query);
         Assert.Equal("#privacy", uri.Fragment);
-        Assert.EndsWith("/Legal/index.html", uri.AbsolutePath, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -28,5 +29,13 @@ public sealed class LegalDocumentServiceTests
     {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             LegalDocumentService.BuildDocumentUri("unknown", CultureInfo.InvariantCulture));
+    }
+
+    [Fact]
+    public void ProjectRepositoryUri_PointsToOfficialGitHubRepository()
+    {
+        Assert.Equal(
+            "https://github.com/vyach-vasiliev/bluetooth-notify/",
+            LegalDocumentService.ProjectRepositoryUri.AbsoluteUri);
     }
 }
