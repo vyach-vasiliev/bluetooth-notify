@@ -1,6 +1,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Drawing.Text;
 using System.Windows.Interop;
 using System.Windows.Threading;
 using BluetoothNotify.App.Interop;
@@ -13,9 +14,10 @@ public sealed class TrayIconService(AppLogger logger, AppThemePreference themePr
     private const uint IconId = 1;
     private const int CallbackMessage = NativeMethods.WM_APP + 42;
     private readonly DispatcherTimer _pointerTimer = new(DispatcherPriority.Input) { Interval = TimeSpan.FromMilliseconds(50) };
+    private readonly PrivateFontCollection _bluetoothIconFont = new();
     private HwndSource? _source;
     private NativeMethods.NotifyIconData _data;
-    private readonly Dictionary<(bool LightTheme, BatteryLevelCategory Category), nint> _icons = [];
+    private readonly Dictionary<(bool LightTheme, BatteryLevelCategory Category, BluetoothIconState BluetoothState), nint> _icons = [];
     private uint _taskbarCreated;
     private NativeRect? _panelBounds;
     private DateTimeOffset? _enteredAt;
@@ -25,6 +27,7 @@ public sealed class TrayIconService(AppLogger logger, AppThemePreference themePr
     private bool _hoverRaised;
     private bool _usesLightTheme;
     private BatteryLevelCategory _batteryCategory = BatteryLevelCategory.Unknown;
+    private BluetoothIconState _bluetoothState = BluetoothIconState.Available;
     private DateTimeOffset _lastThemeCheckAt;
     private AppThemePreference _themePreference = themePreference;
 
@@ -47,9 +50,11 @@ public sealed class TrayIconService(AppLogger logger, AppThemePreference themePr
         _source = new HwndSource(parameters);
         _source.AddHook(WndProc);
         _taskbarCreated = NativeMethods.RegisterWindowMessage("TaskbarCreated");
+        _bluetoothIconFont.AddFontFile(Path.Combine(AppContext.BaseDirectory, "Assets", "FluentSystemIcons-Bluetooth.ttf"));
         foreach (var lightTheme in new[] { false, true })
         foreach (var category in new[] { BatteryLevelCategory.Normal, BatteryLevelCategory.Low, BatteryLevelCategory.Critical })
-            _icons[(lightTheme, category)] = CreateBluetoothIcon(lightTheme, category);
+        foreach (var bluetoothState in Enum.GetValues<BluetoothIconState>())
+            _icons[(lightTheme, category, bluetoothState)] = CreateBluetoothIcon(lightTheme, category, bluetoothState);
         _usesLightTheme = ResolveUsesLightTheme();
         AddIcon();
         _pointerTimer.Tick += OnPointerTick;
@@ -184,6 +189,28 @@ public sealed class TrayIconService(AppLogger logger, AppThemePreference themePr
         UpdateDisplayedIcon();
     }
 
+    public void SetBluetoothStatus(bool isBluetoothAvailable, bool hasConnectedDevices)
+    {
+        var state = ResolveBluetoothIconState(isBluetoothAvailable, hasConnectedDevices);
+        if (state == _bluetoothState) return;
+        _bluetoothState = state;
+        UpdateDisplayedIcon();
+    }
+
+    internal static BluetoothIconState ResolveBluetoothIconState(bool isBluetoothAvailable, bool hasConnectedDevices) =>
+        !isBluetoothAvailable
+            ? BluetoothIconState.Disconnected
+            : hasConnectedDevices
+                ? BluetoothIconState.Connected
+                : BluetoothIconState.Available;
+
+    internal static string ResolveBluetoothIconGlyph(BluetoothIconState state) => state switch
+    {
+        BluetoothIconState.Connected => "\uF1E0", // Bluetooth Connected
+        BluetoothIconState.Disconnected => "\uF1E1", // Bluetooth Disabled
+        _ => "\uE702" // Bluetooth
+    };
+
     public void SetThemePreference(AppThemePreference preference)
     {
         _themePreference = preference;
@@ -195,7 +222,7 @@ public sealed class TrayIconService(AppLogger logger, AppThemePreference themePr
         ? _batteryCategory
         : BatteryLevelCategory.Normal;
 
-    private nint ActiveIcon => _icons.GetValueOrDefault((_usesLightTheme, IconBatteryCategory));
+    private nint ActiveIcon => _icons.GetValueOrDefault((_usesLightTheme, IconBatteryCategory, _bluetoothState));
 
     private void UpdateIconForTheme()
     {
@@ -224,7 +251,10 @@ public sealed class TrayIconService(AppLogger logger, AppThemePreference themePr
     private bool ResolveUsesLightTheme() =>
         ThemeManager.ShouldUseLightTheme(_themePreference, ThemeManager.IsWindowsAppLightTheme());
 
-    private static nint CreateBluetoothIcon(bool lightTheme, BatteryLevelCategory batteryCategory)
+    private nint CreateBluetoothIcon(
+        bool lightTheme,
+        BatteryLevelCategory batteryCategory,
+        BluetoothIconState bluetoothState)
     {
         const int size = 64;
         using var bitmap = new Bitmap(size, size, PixelFormat.Format32bppArgb);
@@ -234,21 +264,61 @@ public sealed class TrayIconService(AppLogger logger, AppThemePreference themePr
         graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
         graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
         graphics.Clear(Color.Transparent);
-        using var font = new Font("Segoe Fluent Icons", 56, FontStyle.Regular, GraphicsUnit.Pixel);
         using var foreground = new SolidBrush(lightTheme
             ? Color.FromArgb(255, 16, 82, 166)
             : Color.FromArgb(255, 76, 147, 255));
         using var format = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
         var bounds = new RectangleF(0, -2, size, size + 4);
-        graphics.DrawString("\uE702", font, foreground, bounds, format);
+        DrawBluetoothGlyph(graphics, foreground, bluetoothState, size);
+
         if (batteryCategory is BatteryLevelCategory.Low or BatteryLevelCategory.Critical)
         {
             using var status = new SolidBrush(GetStatusDotColor(lightTheme, batteryCategory));
+            using var statusFont = new Font("Segoe Fluent Icons", 56, FontStyle.Regular, GraphicsUnit.Pixel);
             // UpdateStatusDot2 is designed to align with another Fluent icon when both
             // glyphs share the same font size and bounds.
-            graphics.DrawString("\uEC83", font, status, bounds, format);
+            graphics.DrawString("\uEC83", statusFont, status, bounds, format);
         }
         return bitmap.GetHicon();
+    }
+
+    private void DrawBluetoothGlyph(
+        Graphics graphics,
+        Brush foreground,
+        BluetoothIconState bluetoothState,
+        int canvasSize)
+    {
+        const float targetHeight = 56;
+        var familyName = bluetoothState == BluetoothIconState.Available
+            ? "Segoe Fluent Icons"
+            : _bluetoothIconFont.Families[0].Name;
+        var fontCollection = bluetoothState == BluetoothIconState.Available ? null : _bluetoothIconFont;
+        using var family = fontCollection is null
+            ? new FontFamily(familyName)
+            : new FontFamily(familyName, fontCollection);
+        using var path = new GraphicsPath();
+        using var glyphFormat = (StringFormat)StringFormat.GenericTypographic.Clone();
+        path.AddString(
+            ResolveBluetoothIconGlyph(bluetoothState),
+            family,
+            (int)FontStyle.Regular,
+            canvasSize,
+            PointF.Empty,
+            glyphFormat);
+
+        var glyphBounds = path.GetBounds();
+        var scale = targetHeight / glyphBounds.Height;
+        var left = (canvasSize - glyphBounds.Width * scale) / 2;
+        var top = (canvasSize - targetHeight) / 2;
+        using var transform = new Matrix(
+            scale,
+            0,
+            0,
+            scale,
+            left - glyphBounds.Left * scale,
+            top - glyphBounds.Top * scale);
+        path.Transform(transform);
+        graphics.FillPath(foreground, path);
     }
 
     private static Color GetStatusDotColor(bool lightTheme, BatteryLevelCategory category) => category switch
@@ -272,5 +342,6 @@ public sealed class TrayIconService(AppLogger logger, AppThemePreference themePr
         foreach (var icon in _icons.Values)
             if (icon != 0) NativeMethods.DestroyIcon(icon);
         _icons.Clear();
+        _bluetoothIconFont.Dispose();
     }
 }

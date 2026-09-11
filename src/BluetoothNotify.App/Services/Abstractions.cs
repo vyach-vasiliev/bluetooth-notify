@@ -56,6 +56,7 @@ public interface ITrayIconService : IDisposable
     NativeRect GetIconRect();
     void Initialize();
     void SetBatteryStatus(int? minimumBatteryPercent);
+    void SetBluetoothStatus(bool isBluetoothAvailable, bool hasConnectedDevices);
     void SetPanelBounds(NativeRect? bounds);
     void SetThemePreference(AppThemePreference preference);
 }

@@ -59,6 +59,98 @@
         <Setter Property="FontWeight" Value="SemiBold" />
     </Style>
 
+    <Style x:Key="SettingsScrollBarThumb" TargetType="Thumb">
+        <Setter Property="MinHeight" Value="36" />
+        <Setter Property="Cursor" Value="SizeNS" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Thumb">
+                    <Grid Background="Transparent">
+                        <Border x:Name="ThumbChrome" Width="5" Margin="0,2"
+                                Background="{DynamicResource Text.Secondary}"
+                                CornerRadius="2.5" Opacity="0.46"
+                                HorizontalAlignment="Center" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ThumbChrome" Property="Width" Value="7" />
+                            <Setter TargetName="ThumbChrome" Property="CornerRadius" Value="3.5" />
+                            <Setter TargetName="ThumbChrome" Property="Opacity" Value="0.78" />
+                        </Trigger>
+                        <Trigger Property="IsDragging" Value="True">
+                            <Setter TargetName="ThumbChrome" Property="Width" Value="7" />
+                            <Setter TargetName="ThumbChrome" Property="CornerRadius" Value="3.5" />
+                            <Setter TargetName="ThumbChrome" Property="Background" Value="{DynamicResource Accent.Brush}" />
+                            <Setter TargetName="ThumbChrome" Property="Opacity" Value="1" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="ThumbChrome" Property="Opacity" Value="0.24" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SettingsScrollBarPageButton" TargetType="RepeatButton">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RepeatButton">
+                    <Border Background="Transparent" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SettingsScrollBar" TargetType="ScrollBar">
+        <Setter Property="Width" Value="12" />
+        <Setter Property="MinWidth" Value="12" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ScrollBar">
+                    <Grid Width="12" Background="Transparent" UseLayoutRounding="True">
+                        <Border x:Name="TrackChrome" Margin="1" Background="{DynamicResource Surface.Hover}"
+                                CornerRadius="5" Opacity="0" />
+                        <Track x:Name="PART_Track" Margin="1,2" IsDirectionReversed="True" Focusable="False">
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton Style="{StaticResource SettingsScrollBarPageButton}"
+                                              Command="{x:Static ScrollBar.PageUpCommand}" />
+                            </Track.DecreaseRepeatButton>
+                            <Track.Thumb>
+                                <Thumb Style="{StaticResource SettingsScrollBarThumb}" />
+                            </Track.Thumb>
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton Style="{StaticResource SettingsScrollBarPageButton}"
+                                              Command="{x:Static ScrollBar.PageDownCommand}" />
+                            </Track.IncreaseRepeatButton>
+                        </Track>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="TrackChrome" Property="Opacity" Value="0.58" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.35" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SettingsScrollViewer" TargetType="ScrollViewer">
+        <Style.Resources>
+            <Style TargetType="ScrollBar" BasedOn="{StaticResource SettingsScrollBar}" />
+        </Style.Resources>
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+    </Style>
+
     <Style x:Key="SettingsComboItem" TargetType="ComboBoxItem">
         <Setter Property="Padding" Value="10,8" />
         <Setter Property="Foreground" Value="{DynamicResource Text.Primary}" />
@@ -114,7 +206,7 @@
                             <Border MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}" MaxHeight="240"
                                     Background="{DynamicResource Surface.Background}" BorderBrush="{DynamicResource Border.Brush}" BorderThickness="1"
                                     CornerRadius="9" Padding="4" Margin="0,4,0,0">
-                                <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel IsItemsHost="True" /></ScrollViewer>
+                                <ScrollViewer Style="{StaticResource SettingsScrollViewer}"><StackPanel IsItemsHost="True" /></ScrollViewer>
                             </Border>
                         </Popup>
                     </Grid>

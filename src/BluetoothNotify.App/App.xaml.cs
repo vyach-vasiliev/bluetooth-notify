@@ -386,6 +386,7 @@ public partial class App : Application
     {
         try
         {
+            _tray?.SetBluetoothStatus(e.IsBluetoothAvailable, e.Devices.Any(device => device.IsConnected));
             if (_viewModel is null) return;
             var options = new BatteryNotificationOptions(
                 _viewModel.MediumBatteryNotificationEnabled,

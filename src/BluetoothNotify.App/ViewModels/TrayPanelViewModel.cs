@@ -19,9 +19,12 @@ public sealed class BatteryStatusChangedEventArgs(int? minimumBatteryPercent) : 
     public int? MinimumBatteryPercent { get; } = minimumBatteryPercent;
 }
 
-public sealed class DevicesRefreshedEventArgs(IReadOnlyList<BluetoothDeviceState> devices) : EventArgs
+public sealed class DevicesRefreshedEventArgs(
+    IReadOnlyList<BluetoothDeviceState> devices,
+    bool isBluetoothAvailable) : EventArgs
 {
     public IReadOnlyList<BluetoothDeviceState> Devices { get; } = devices;
+    public bool IsBluetoothAvailable { get; } = isBluetoothAvailable;
 }
 
 public sealed class TrayPanelViewModel : ObservableObject
@@ -311,7 +314,7 @@ public sealed class TrayPanelViewModel : ObservableObject
         OnPropertyChanged(nameof(BatterySummary));
         OnPropertyChanged(nameof(ShowEmptyState));
         BatteryStatusChanged?.Invoke(this, new BatteryStatusChangedEventArgs(GetMinimumConnectedBattery(Devices)));
-        DevicesRefreshed?.Invoke(this, new DevicesRefreshedEventArgs(snapshot.Devices));
+        DevicesRefreshed?.Invoke(this, new DevicesRefreshedEventArgs(snapshot.Devices, snapshot.IsBluetoothAvailable));
     }
 
     private async Task ToggleNotificationsAsync()

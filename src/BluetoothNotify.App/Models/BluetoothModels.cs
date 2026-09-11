@@ -24,6 +24,13 @@ public enum BatteryLevelCategory
     Normal
 }
 
+public enum BluetoothIconState
+{
+    Available,
+    Connected,
+    Disconnected
+}
+
 public static class BatteryLevelClassifier
 {
     public static BatteryLevelCategory GetCategory(int? percent) => percent switch

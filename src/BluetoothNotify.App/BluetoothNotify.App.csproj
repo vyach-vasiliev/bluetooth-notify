@@ -23,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Remove="Assets/BluetoothNotify.Notification.png" />
+    <Content Include="Assets/FluentSystemIcons-Bluetooth.ttf" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="Assets/BluetoothNotify.Dark.ico" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="Assets/BluetoothNotify.Light.ico" CopyToOutputDirectory="PreserveNewest" />
     <None Include="Assets/BluetoothNotify.Notification.png" CopyToOutputDirectory="PreserveNewest" />

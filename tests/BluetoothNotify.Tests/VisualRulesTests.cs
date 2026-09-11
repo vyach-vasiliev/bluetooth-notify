@@ -18,6 +18,24 @@ public sealed class VisualRulesTests
         Assert.Equal(expected, BatteryLevelClassifier.GetCategory(value));
 
     [Theory]
+    [InlineData(false, false, BluetoothIconState.Disconnected)]
+    [InlineData(false, true, BluetoothIconState.Disconnected)]
+    [InlineData(true, false, BluetoothIconState.Available)]
+    [InlineData(true, true, BluetoothIconState.Connected)]
+    public void TrayIcon_ReflectsBluetoothAvailabilityAndConnections(
+        bool isBluetoothAvailable,
+        bool hasConnectedDevices,
+        BluetoothIconState expected) =>
+        Assert.Equal(expected, TrayIconService.ResolveBluetoothIconState(isBluetoothAvailable, hasConnectedDevices));
+
+    [Theory]
+    [InlineData(BluetoothIconState.Available, "\uE702")]
+    [InlineData(BluetoothIconState.Connected, "\uF1E0")]
+    [InlineData(BluetoothIconState.Disconnected, "\uF1E1")]
+    public void TrayIcon_UsesStateSpecificFluentGlyph(BluetoothIconState state, string expected) =>
+        Assert.Equal(expected, TrayIconService.ResolveBluetoothIconGlyph(state));
+
+    [Theory]
     [InlineData(BluetoothDeviceKind.Mouse)]
     [InlineData(BluetoothDeviceKind.Keyboard)]
     [InlineData(BluetoothDeviceKind.Headphones)]

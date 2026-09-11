@@ -192,7 +192,7 @@
                     </StackPanel>
                 </Grid>
 
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" MaxHeight="500">
+                <ScrollViewer Grid.Row="1" Style="{StaticResource SettingsScrollViewer}" MaxHeight="500">
                 <StackPanel Margin="16,4,16,18">
                     <Border Background="{DynamicResource Surface.Background}" BorderBrush="{DynamicResource Card.Border}" BorderThickness="1" CornerRadius="14" Padding="16">
                         <Grid>
