@@ -515,12 +515,18 @@ async function copyCommand() {
     </main>
 
     <footer class="relative z-10 border-t-2 border-[var(--ink)] bg-[var(--paper)]">
-      <div class="page-shell flex flex-col gap-5 py-8 text-sm sm:flex-row sm:items-center sm:justify-between">
+      <div class="page-shell flex flex-col gap-5 py-8 text-sm lg:flex-row lg:items-center lg:justify-between">
         <a href="#top" class="brand-link">
           <span class="brand-mark"><Bluetooth :size="18" aria-hidden="true" /></span>
           <span class="font-extrabold uppercase">Bluetooth Notify</span>
         </a>
-        <p class="font-semibold text-slate-600">Focused Bluetooth battery status for Windows 11.</p>
+        <nav class="legal-links" :aria-label="copy.footer.legalLabel">
+          <a :href="`/legal/index.html?lang=${locale}#privacy`">{{ copy.footer.privacy }}</a>
+          <a :href="`/legal/index.html?lang=${locale}#terms`">{{ copy.footer.terms }}</a>
+          <a :href="`/legal/index.html?lang=${locale}#disclaimer`">{{ copy.footer.disclaimer }}</a>
+          <a href="/legal/LICENSE.md">{{ copy.footer.license }}</a>
+        </nav>
+        <p class="font-semibold text-slate-600">{{ copy.footer.tagline }}</p>
       </div>
     </footer>
   </div>

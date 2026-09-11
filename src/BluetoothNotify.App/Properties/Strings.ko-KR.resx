@@ -57,4 +57,10 @@
   <data name="LowBatteryNotification" xml:space="preserve"><value>배터리 부족</value></data>
   <data name="StatusAutomationName" xml:space="preserve"><value>{0} 상태</value></data>
   <data name="Loading" xml:space="preserve"><value>데이터 업데이트 중</value></data>
+  <data name="LegalInformation" xml:space="preserve"><value>법적 정보</value></data>
+  <data name="LegalInformationDescription" xml:space="preserve"><value>개인정보, 이용 조건 및 중요 제한사항</value></data>
+  <data name="PrivacyPolicy" xml:space="preserve"><value>개인정보 처리방침</value></data>
+  <data name="TermsOfUse" xml:space="preserve"><value>이용약관</value></data>
+  <data name="Disclaimer" xml:space="preserve"><value>면책조항</value></data>
+  <data name="LegalDocumentOpenError" xml:space="preserve"><value>법적 정보를 열 수 없습니다</value></data>
 </root>

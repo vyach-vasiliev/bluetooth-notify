@@ -64,4 +64,10 @@ public static class Strings
     public static string LowBatteryNotification => Get(nameof(LowBatteryNotification));
     public static string StatusAutomationName => Get(nameof(StatusAutomationName));
     public static string Loading => Get(nameof(Loading));
+    public static string LegalInformation => Get(nameof(LegalInformation));
+    public static string LegalInformationDescription => Get(nameof(LegalInformationDescription));
+    public static string PrivacyPolicy => Get(nameof(PrivacyPolicy));
+    public static string TermsOfUse => Get(nameof(TermsOfUse));
+    public static string Disclaimer => Get(nameof(Disclaimer));
+    public static string LegalDocumentOpenError => Get(nameof(LegalDocumentOpenError));
 }

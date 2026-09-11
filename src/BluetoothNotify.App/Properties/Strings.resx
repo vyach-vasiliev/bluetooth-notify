@@ -57,4 +57,10 @@
   <data name="LowBatteryNotification" xml:space="preserve"><value>Низкий уровень заряда</value></data>
   <data name="StatusAutomationName" xml:space="preserve"><value>Состояние устройства {0}</value></data>
   <data name="Loading" xml:space="preserve"><value>Обновление данных</value></data>
+  <data name="LegalInformation" xml:space="preserve"><value>Правовая информация</value></data>
+  <data name="LegalInformationDescription" xml:space="preserve"><value>Политика, условия и важные ограничения</value></data>
+  <data name="PrivacyPolicy" xml:space="preserve"><value>Конфиденциальность</value></data>
+  <data name="TermsOfUse" xml:space="preserve"><value>Условия использования</value></data>
+  <data name="Disclaimer" xml:space="preserve"><value>Отказ от ответственности</value></data>
+  <data name="LegalDocumentOpenError" xml:space="preserve"><value>Не удалось открыть правовую информацию</value></data>
 </root>

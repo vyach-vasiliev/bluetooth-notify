@@ -25,5 +25,10 @@
     <Content Include="Assets/BluetoothNotify.Dark.ico" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="Assets/BluetoothNotify.Light.ico" CopyToOutputDirectory="PreserveNewest" />
     <None Include="Assets/BluetoothNotify.Notification.png" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\site\public\legal\**\*.*">
+      <Link>Legal\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 </Project>

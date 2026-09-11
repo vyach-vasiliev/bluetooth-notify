@@ -57,4 +57,10 @@
   <data name="LowBatteryNotification" xml:space="preserve"><value>Niedriger Akkustand</value></data>
   <data name="StatusAutomationName" xml:space="preserve"><value>Status von {0}</value></data>
   <data name="Loading" xml:space="preserve"><value>Daten werden aktualisiert</value></data>
+  <data name="LegalInformation" xml:space="preserve"><value>Rechtliche Hinweise</value></data>
+  <data name="LegalInformationDescription" xml:space="preserve"><value>Datenschutz, Bedingungen und wichtige Einschränkungen</value></data>
+  <data name="PrivacyPolicy" xml:space="preserve"><value>Datenschutz</value></data>
+  <data name="TermsOfUse" xml:space="preserve"><value>Nutzungsbedingungen</value></data>
+  <data name="Disclaimer" xml:space="preserve"><value>Haftungsausschluss</value></data>
+  <data name="LegalDocumentOpenError" xml:space="preserve"><value>Die rechtlichen Hinweise konnten nicht geöffnet werden</value></data>
 </root>

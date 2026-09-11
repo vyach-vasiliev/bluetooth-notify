@@ -1,0 +1,25 @@
+BLUETOOTH NOTIFY — PRIVACY NOTICE AND DISCLAIMER
+Effective and last updated: 11 September 2026 · Version 1.2
+
+LOCAL-FIRST PRIVACY SUMMARY
+• The app reads paired-device name, Windows endpoint/container identifiers, available Bluetooth address, device category, connection state, and battery level. It uses these details in memory and does not persist or upload them.
+• Settings are stored in %LocalAppData%\BluetoothNotify\settings.json.
+• Rotating local technical logs store timestamps, app events, error types, and error messages (up to five files of about 512 KiB). Device names/addresses are not intentionally logged, but operating-system error text could contain local technical details.
+• The installer checks Microsoft prerequisites locally and may create a local setup log. It opens Microsoft pages only after permission and sends no installation data to the publisher.
+• The static website at https://bluetooth-notify.onrender.com/ sets no cookies and uses no analytics, advertising, accounts, forms, pixels, fingerprinting, or telemetry. It is hosted as a Render static site. Render may process device/IP and infrastructure data under https://render.com/privacy; Render states that static sites do not emit application request logs.
+• The unmodified app does not sell, share, rent, upload, profile, or make legally significant automated decisions with personal data. In-memory data disappears on exit. Settings and logs remain until the user deletes them or selects removal during uninstall.
+
+PUBLISHER AND CONTACT
+Bluetooth Notify is published by the developer operating the GitHub account “vyach-vasiliev”. Source: https://github.com/vyach-vasiliev/bluetooth-notify/. Privacy, legal, and support requests: https://github.com/vyach-vasiliev/.
+
+USER CONTROL AND RIGHTS
+You may disable notifications, delete %LocalAppData%\BluetoothNotify, uninstall, and avoid external links. Because the publisher receives no app data, access, correction, deletion, portability, restriction, objection, and withdrawal are normally completed on the device. Applicable rights under GDPR/UK GDPR, Russia’s Law No. 152-FZ, California privacy law, Japan’s APPI, Korea’s PIPA, and China’s PIPL remain available. No mandatory consumer or privacy right is waived.
+
+DISCLAIMER
+Bluetooth Notify reports best-effort information exposed by Windows, devices, and drivers. Battery and connection data may be missing, delayed, cached, stale, duplicated, or wrong; notifications may be late, absent, or repeated. Verify critical status with the manufacturer’s tools.
+
+The app is a convenience utility, not a safety, emergency, medical, accessibility, security, industrial, or life-support system. Do not rely on it where failure could cause injury, property/data loss, or interruption of essential services.
+
+To the maximum extent permitted by law, the app and website are provided “as is” and “as available”, without warranties, and the publisher/contributors are not liable for indirect, incidental, special, consequential, or punitive loss, or loss of data, profit, opportunity, or availability. Nothing excludes liability that cannot lawfully be excluded, including applicable liability for fraud, intentional misconduct, gross negligence, death or personal injury caused by negligence, or mandatory consumer remedies.
+
+The complete localized documents are installed with the app and available from Settings → Legal information.

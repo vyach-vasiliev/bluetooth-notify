@@ -57,4 +57,10 @@
   <data name="LowBatteryNotification" xml:space="preserve"><value>Niveau de batterie faible</value></data>
   <data name="StatusAutomationName" xml:space="preserve"><value>État de {0}</value></data>
   <data name="Loading" xml:space="preserve"><value>Mise à jour des données</value></data>
+  <data name="LegalInformation" xml:space="preserve"><value>Informations juridiques</value></data>
+  <data name="LegalInformationDescription" xml:space="preserve"><value>Confidentialité, conditions et limitations importantes</value></data>
+  <data name="PrivacyPolicy" xml:space="preserve"><value>Confidentialité</value></data>
+  <data name="TermsOfUse" xml:space="preserve"><value>Conditions d’utilisation</value></data>
+  <data name="Disclaimer" xml:space="preserve"><value>Clause de non-responsabilité</value></data>
+  <data name="LegalDocumentOpenError" xml:space="preserve"><value>Impossible d’ouvrir les informations juridiques</value></data>
 </root>

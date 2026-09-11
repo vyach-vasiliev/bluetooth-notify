@@ -57,4 +57,10 @@
   <data name="LowBatteryNotification" xml:space="preserve"><value>バッテリー残量低下</value></data>
   <data name="StatusAutomationName" xml:space="preserve"><value>{0} の状態</value></data>
   <data name="Loading" xml:space="preserve"><value>データを更新中</value></data>
+  <data name="LegalInformation" xml:space="preserve"><value>法的情報</value></data>
+  <data name="LegalInformationDescription" xml:space="preserve"><value>プライバシー、利用条件、重要な制限</value></data>
+  <data name="PrivacyPolicy" xml:space="preserve"><value>プライバシー</value></data>
+  <data name="TermsOfUse" xml:space="preserve"><value>利用規約</value></data>
+  <data name="Disclaimer" xml:space="preserve"><value>免責事項</value></data>
+  <data name="LegalDocumentOpenError" xml:space="preserve"><value>法的情報を開けませんでした</value></data>
 </root>

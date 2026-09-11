@@ -57,7 +57,7 @@ export const translations = {
       description: 'The installer checks both prerequisites and opens the official Microsoft download page if either one is missing. Developers can also launch the app from source.',
       line: '01 LINE', copy: 'Copy command', copied: 'Copied', copyAria: 'Copy build command', copiedAria: 'Command copied',
     },
-    footer: { legalLabel: 'Legal information', privacy: 'Privacy', terms: 'Terms', disclaimer: 'Disclaimer', tagline: 'Focused Bluetooth battery status for Windows 11.' },
+    footer: { legalLabel: 'Legal information', privacy: 'Privacy', terms: 'Terms', disclaimer: 'Disclaimer', license: 'License', tagline: 'Focused Bluetooth battery status for Windows 11.' },
   },
 
   ru: {
@@ -104,7 +104,7 @@ export const translations = {
       description: 'Установщик проверит оба обязательных компонента и откроет официальную страницу Microsoft, если чего-то не хватает. Разработчики могут запустить приложение из исходников.',
       line: '01 СТРОКА', copy: 'Копировать команду', copied: 'Скопировано', copyAria: 'Скопировать команду сборки', copiedAria: 'Команда скопирована',
     },
-    footer: { legalLabel: 'Правовая информация', privacy: 'Конфиденциальность', terms: 'Условия', disclaimer: 'Отказ от ответственности', tagline: 'Точный заряд Bluetooth-устройств в Windows 11.' },
+    footer: { legalLabel: 'Правовая информация', privacy: 'Конфиденциальность', terms: 'Условия', disclaimer: 'Отказ от ответственности', license: 'Лицензия', tagline: 'Точный заряд Bluetooth-устройств в Windows 11.' },
   },
 
   de: {
@@ -151,7 +151,7 @@ export const translations = {
       description: 'Das Installationsprogramm prüft beide Voraussetzungen und öffnet bei Bedarf die offizielle Microsoft-Downloadseite. Entwickler können die App auch aus dem Quellcode starten.',
       line: '01 ZEILE', copy: 'Befehl kopieren', copied: 'Kopiert', copyAria: 'Build-Befehl kopieren', copiedAria: 'Befehl kopiert',
     },
-    footer: { legalLabel: 'Rechtliche Hinweise', privacy: 'Datenschutz', terms: 'Bedingungen', disclaimer: 'Haftungsausschluss', tagline: 'Fokussierter Bluetooth-Akkustatus für Windows 11.' },
+    footer: { legalLabel: 'Rechtliche Hinweise', privacy: 'Datenschutz', terms: 'Bedingungen', disclaimer: 'Haftungsausschluss', license: 'Lizenz', tagline: 'Fokussierter Bluetooth-Akkustatus für Windows 11.' },
   },
 
   ja: {
@@ -198,7 +198,7 @@ export const translations = {
       description: 'インストーラーは2つの前提コンポーネントを確認し、不足している場合は Microsoft の公式ダウンロードページを開きます。開発者はソースから直接起動できます。',
       line: '01 行', copy: 'コマンドをコピー', copied: 'コピーしました', copyAria: 'ビルドコマンドをコピー', copiedAria: 'コマンドをコピーしました',
     },
-    footer: { legalLabel: '法的情報', privacy: 'プライバシー', terms: '利用規約', disclaimer: '免責事項', tagline: 'Windows 11 の Bluetooth バッテリー状態を、ひと目で。' },
+    footer: { legalLabel: '法的情報', privacy: 'プライバシー', terms: '利用規約', disclaimer: '免責事項', license: 'ライセンス', tagline: 'Windows 11 の Bluetooth バッテリー状態を、ひと目で。' },
   },
 
   fr: {
@@ -245,7 +245,7 @@ export const translations = {
       description: 'Le programme d’installation vérifie les deux prérequis et ouvre la page Microsoft officielle si l’un manque. Les développeurs peuvent aussi lancer l’application depuis les sources.',
       line: '01 LIGNE', copy: 'Copier la commande', copied: 'Copiée', copyAria: 'Copier la commande de compilation', copiedAria: 'Commande copiée',
     },
-    footer: { legalLabel: 'Informations légales', privacy: 'Confidentialité', terms: 'Conditions', disclaimer: 'Clause de non-responsabilité', tagline: 'L’état de la batterie Bluetooth sous Windows 11, sans détour.' },
+    footer: { legalLabel: 'Informations légales', privacy: 'Confidentialité', terms: 'Conditions', disclaimer: 'Clause de non-responsabilité', license: 'Licence', tagline: 'L’état de la batterie Bluetooth sous Windows 11, sans détour.' },
   },
 
   es: {
@@ -292,7 +292,7 @@ export const translations = {
       description: 'El instalador comprueba ambos requisitos y abre la página oficial de Microsoft si falta alguno. Los desarrolladores también pueden iniciar la aplicación desde el código fuente.',
       line: '01 LÍNEA', copy: 'Copiar comando', copied: 'Copiado', copyAria: 'Copiar comando de compilación', copiedAria: 'Comando copiado',
     },
-    footer: { legalLabel: 'Información legal', privacy: 'Privacidad', terms: 'Condiciones', disclaimer: 'Aviso legal', tagline: 'Estado de batería Bluetooth claro y directo para Windows 11.' },
+    footer: { legalLabel: 'Información legal', privacy: 'Privacidad', terms: 'Condiciones', disclaimer: 'Aviso legal', license: 'Licencia', tagline: 'Estado de batería Bluetooth claro y directo para Windows 11.' },
   },
 
   pt: {
@@ -339,7 +339,7 @@ export const translations = {
       description: 'O instalador verifica ambos os pré-requisitos e abre a página oficial da Microsoft se faltar algum. Os programadores também podem iniciar a aplicação a partir do código.',
       line: '01 LINHA', copy: 'Copiar comando', copied: 'Copiado', copyAria: 'Copiar comando de compilação', copiedAria: 'Comando copiado',
     },
-    footer: { legalLabel: 'Informação jurídica', privacy: 'Privacidade', terms: 'Termos', disclaimer: 'Isenção de responsabilidade', tagline: 'Estado da bateria Bluetooth, sem distrações, para Windows 11.' },
+    footer: { legalLabel: 'Informação jurídica', privacy: 'Privacidade', terms: 'Termos', disclaimer: 'Isenção de responsabilidade', license: 'Licença', tagline: 'Estado da bateria Bluetooth, sem distrações, para Windows 11.' },
   },
 
   zh: {
@@ -386,7 +386,7 @@ export const translations = {
       description: '安装程序会检查两个必备组件，如有缺失则打开 Microsoft 官方下载页面。开发者也可以直接从源代码启动应用。',
       line: '01 行', copy: '复制命令', copied: '已复制', copyAria: '复制构建命令', copiedAria: '命令已复制',
     },
-    footer: { legalLabel: '法律信息', privacy: '隐私政策', terms: '使用条款', disclaimer: '免责声明', tagline: '专注呈现 Windows 11 蓝牙设备电量。' },
+    footer: { legalLabel: '法律信息', privacy: '隐私政策', terms: '使用条款', disclaimer: '免责声明', license: '许可证', tagline: '专注呈现 Windows 11 蓝牙设备电量。' },
   },
 
   ko: {
@@ -433,7 +433,7 @@ export const translations = {
       description: '설치 프로그램은 두 필수 구성 요소를 확인하고, 빠진 항목이 있으면 Microsoft 공식 다운로드 페이지를 엽니다. 개발자는 소스에서 앱을 실행할 수도 있습니다.',
       line: '01줄', copy: '명령 복사', copied: '복사됨', copyAria: '빌드 명령 복사', copiedAria: '명령이 복사되었습니다',
     },
-    footer: { legalLabel: '법적 정보', privacy: '개인정보', terms: '이용약관', disclaimer: '면책조항', tagline: 'Windows 11에서 Bluetooth 배터리 상태를 간결하게.' },
+    footer: { legalLabel: '법적 정보', privacy: '개인정보', terms: '이용약관', disclaimer: '면책조항', license: '라이선스', tagline: 'Windows 11에서 Bluetooth 배터리 상태를 간결하게.' },
   },
 }
 

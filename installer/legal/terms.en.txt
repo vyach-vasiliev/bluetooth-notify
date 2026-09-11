@@ -1,0 +1,27 @@
+BLUETOOTH NOTIFY — TERMS OF USE
+Effective and last updated: 11 September 2026 · Version 1.2
+
+PLEASE READ THESE TERMS. BY SELECTING “I ACCEPT”, INSTALLING, OR USING BLUETOOTH NOTIFY, YOU AGREE TO THEM. IF YOU DO NOT AGREE, CANCEL THE INSTALLATION.
+
+1. Publisher and contact
+Bluetooth Notify is published by the developer operating the GitHub account “vyach-vasiliev”. Official website: https://bluetooth-notify.onrender.com/. Source code: https://github.com/vyach-vasiliev/bluetooth-notify/. Send privacy, legal, and support requests through https://github.com/vyach-vasiliev/.
+
+2. Eligibility
+You must be legally capable of entering this agreement, or act with authorization from a parent, guardian, or organization. A person installing for an organization confirms authority to bind it.
+
+3. License
+Bluetooth Notify is free and open-source software licensed under the GNU Affero General Public License version 3 only (AGPL-3.0-only). Commercial use is permitted. Distribution of the original or a modified covered work must preserve the AGPL and provide the corresponding source as required by the license. If a modified version supports remote network interaction, its users must also be offered access to the corresponding source. The full license is installed with the app and available at https://www.gnu.org/licenses/agpl-3.0.html.
+
+4. Responsible use
+Do not use the app unlawfully; bypass platform security; introduce malware; misrepresent the publisher; or redistribute a modified build as official. You are responsible for device access, backups, configuration, and checking hardware and driver compatibility.
+
+5. Third parties and changes
+Windows, .NET, Windows App Runtime, hardware, drivers, notifications, hosting, and linked sites are supplied by third parties under their own terms. The app may be changed, updated, suspended, or discontinued. Material legal changes apply prospectively from their posted date; continued use after notice constitutes acceptance where law permits.
+
+6. Termination
+You may end these Terms by uninstalling and deleting local data. The license may end after a material breach. Ownership, disclaimers, liability, disputes, and mandatory rights survive where their nature requires.
+
+7. Consumer rights and disputes
+Nothing in these Terms waives warranties, remedies, withdrawal rights, jurisdiction, or protections that applicable consumer law does not allow parties to exclude. Mandatory law of your habitual residence prevails. Otherwise, disputes are governed by the law applicable to the publisher identified by the distributor, without conflict-of-law rules. Contact the distributor first to seek an informal resolution.
+
+The complete, localized Privacy Policy, Terms of Use, and Disclaimer are installed with the app and are available from Settings → Legal information.

@@ -31,7 +31,10 @@ AppId={{9E5F51D4-E8B7-4B01-9933-F6B066CDFB94}
 AppName={#AppName}
 AppVersion={#AppVersion}
 AppVerName={#AppName} {#AppVersion}
-AppPublisher=Bluetooth Notify contributors
+AppPublisher=vyach-vasiliev
+AppPublisherURL=https://github.com/vyach-vasiliev/
+AppSupportURL=https://github.com/vyach-vasiliev/bluetooth-notify/issues
+AppUpdatesURL=https://github.com/vyach-vasiliev/bluetooth-notify/releases
 DefaultDirName={localappdata}\Programs\Bluetooth Notify
 DefaultGroupName=Bluetooth Notify
 DisableProgramGroupPage=yes
@@ -53,14 +56,15 @@ RestartApplications=no
 SetupLogging=yes
 UsePreviousAppDir=yes
 VersionInfoVersion={#AppVersion}
-VersionInfoCompany=Bluetooth Notify
+VersionInfoCompany=vyach-vasiliev
 VersionInfoDescription={#AppName} Setup
 VersionInfoProductName={#AppName}
 VersionInfoProductVersion={#AppVersion}
+AppReadmeFile={app}\Legal\index.html
 
 [Languages]
-Name: "english"; MessagesFile: "compiler:Default.isl"
-Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
+Name: "english"; MessagesFile: "compiler:Default.isl"; LicenseFile: "legal\terms.en.txt"; InfoBeforeFile: "legal\privacy-disclaimer.en.txt"
+Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"; LicenseFile: "legal\terms.ru.txt"; InfoBeforeFile: "legal\privacy-disclaimer.ru.txt"
 
 [CustomMessages]
 english.LaunchProgram=Launch %1

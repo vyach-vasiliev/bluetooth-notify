@@ -1,9 +1,11 @@
 <Project>
   <PropertyGroup>
     <Version>1.0.0</Version>
-    <Company>Bluetooth Notify</Company>
-    <Authors>Bluetooth Notify contributors</Authors>
-    <Copyright>Copyright © 2026</Copyright>
+    <Company>vyach-vasiliev</Company>
+    <Authors>vyach-vasiliev</Authors>
+    <Copyright>Copyright © 2026 vyach-vasiliev</Copyright>
+    <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/vyach-vasiliev/bluetooth-notify</RepositoryUrl>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>

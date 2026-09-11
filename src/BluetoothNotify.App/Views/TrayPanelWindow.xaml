@@ -214,6 +214,19 @@
                             </Grid>
                         </Grid>
                     </Border>
+
+                    <StackPanel Margin="4,20,4,9">
+                        <TextBlock Text="{x:Static p:Strings.LegalInformation}" FontWeight="SemiBold" FontSize="14" />
+                        <TextBlock Text="{x:Static p:Strings.LegalInformationDescription}" Foreground="{DynamicResource Text.Secondary}" FontSize="12" Margin="0,3,0,0" TextWrapping="Wrap" />
+                    </StackPanel>
+
+                    <Border Background="{DynamicResource Surface.Background}" BorderBrush="{DynamicResource Card.Border}" BorderThickness="1" CornerRadius="14" Padding="8">
+                        <WrapPanel HorizontalAlignment="Left">
+                            <Button Style="{StaticResource TextButton}" Command="{Binding OpenPrivacyPolicyCommand}" Content="{x:Static p:Strings.PrivacyPolicy}" AutomationProperties.Name="{x:Static p:Strings.PrivacyPolicy}" Margin="0,0,4,4" />
+                            <Button Style="{StaticResource TextButton}" Command="{Binding OpenTermsCommand}" Content="{x:Static p:Strings.TermsOfUse}" AutomationProperties.Name="{x:Static p:Strings.TermsOfUse}" Margin="0,0,4,4" />
+                            <Button Style="{StaticResource TextButton}" Command="{Binding OpenDisclaimerCommand}" Content="{x:Static p:Strings.Disclaimer}" AutomationProperties.Name="{x:Static p:Strings.Disclaimer}" Margin="0,0,4,4" />
+                        </WrapPanel>
+                    </Border>
                 </StackPanel>
                 </ScrollViewer>
             </Grid>

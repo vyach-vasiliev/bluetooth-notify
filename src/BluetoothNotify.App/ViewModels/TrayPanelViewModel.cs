@@ -34,6 +34,9 @@ public sealed class TrayPanelViewModel : ObservableObject
     private readonly RelayCommand _exitCommand;
     private readonly RelayCommand _openSettingsCommand;
     private readonly RelayCommand _closeSettingsCommand;
+    private readonly RelayCommand _openPrivacyPolicyCommand;
+    private readonly RelayCommand _openTermsCommand;
+    private readonly RelayCommand _openDisclaimerCommand;
     private readonly SemaphoreSlim _settingsSaveGate = new(1, 1);
     private bool _isBusy;
     private bool _isBluetoothAvailable = true;
@@ -59,6 +62,9 @@ public sealed class TrayPanelViewModel : ObservableObject
         _exitCommand = new RelayCommand(() => ExitRequested?.Invoke(this, EventArgs.Empty));
         _openSettingsCommand = new RelayCommand(OpenSettings);
         _closeSettingsCommand = new RelayCommand(CloseSettings);
+        _openPrivacyPolicyCommand = new RelayCommand(() => OpenLegalDocument("privacy"));
+        _openTermsCommand = new RelayCommand(() => OpenLegalDocument("terms"));
+        _openDisclaimerCommand = new RelayCommand(() => OpenLegalDocument("disclaimer"));
     }
 
     public ObservableCollection<BluetoothDeviceViewModel> Devices { get; } = [];
@@ -71,6 +77,9 @@ public sealed class TrayPanelViewModel : ObservableObject
     public RelayCommand ExitCommand => _exitCommand;
     public RelayCommand OpenSettingsCommand => _openSettingsCommand;
     public RelayCommand CloseSettingsCommand => _closeSettingsCommand;
+    public RelayCommand OpenPrivacyPolicyCommand => _openPrivacyPolicyCommand;
+    public RelayCommand OpenTermsCommand => _openTermsCommand;
+    public RelayCommand OpenDisclaimerCommand => _openDisclaimerCommand;
 
     public bool IsBusy { get => _isBusy; private set => SetProperty(ref _isBusy, value); }
     public bool IsBluetoothAvailable { get => _isBluetoothAvailable; private set { if (SetProperty(ref _isBluetoothAvailable, value)) OnPropertyChanged(nameof(ShowEmptyState)); } }
@@ -186,6 +195,11 @@ public sealed class TrayPanelViewModel : ObservableObject
 
     public void OpenSettings() => IsSettingsOpen = true;
     public void CloseSettings() => IsSettingsOpen = false;
+
+    private void OpenLegalDocument(string section)
+    {
+        if (!LegalDocumentService.TryOpen(section)) Warning = Properties.Strings.LegalDocumentOpenError;
+    }
 
     public void Initialize(AppSettings settings)
     {

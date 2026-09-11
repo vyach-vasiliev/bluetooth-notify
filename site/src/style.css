@@ -415,6 +415,10 @@ button { cursor: pointer; }
 .copy-icon-stack { position: relative; display: grid; width: 19px; height: 19px; place-items: center; }
 .copy-icon-stack svg { transition-property: opacity, transform, filter; transition-duration: 180ms; transition-timing-function: cubic-bezier(0.2, 0, 0, 1); }
 .copy-icon-hidden { opacity: 0; filter: blur(4px); transform: scale(0.25); }
+.legal-links { display: flex; flex-wrap: wrap; gap: 0.35rem 1rem; font-weight: 800; }
+.legal-links a { color: #52607c; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.legal-links a:hover { color: var(--blue); }
+.legal-links a:focus-visible { outline: 3px solid var(--coral); outline-offset: 3px; }
 
 @keyframes field-drift { to { transform: translate3d(28px, 28px, 0); } }
 @keyframes signal-float-a { 50% { transform: translate3d(26px, -18px, 0) rotate(45deg); } }

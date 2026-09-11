@@ -57,4 +57,10 @@
   <data name="LowBatteryNotification" xml:space="preserve"><value>低电量</value></data>
   <data name="StatusAutomationName" xml:space="preserve"><value>{0} 的状态</value></data>
   <data name="Loading" xml:space="preserve"><value>正在更新数据</value></data>
+  <data name="LegalInformation" xml:space="preserve"><value>法律信息</value></data>
+  <data name="LegalInformationDescription" xml:space="preserve"><value>隐私、使用条款及重要限制</value></data>
+  <data name="PrivacyPolicy" xml:space="preserve"><value>隐私政策</value></data>
+  <data name="TermsOfUse" xml:space="preserve"><value>使用条款</value></data>
+  <data name="Disclaimer" xml:space="preserve"><value>免责声明</value></data>
+  <data name="LegalDocumentOpenError" xml:space="preserve"><value>无法打开法律信息</value></data>
 </root>
