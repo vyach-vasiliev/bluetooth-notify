@@ -201,6 +201,7 @@ public partial class App : Application
             _viewModel?.OpenSettings();
             ShowPanel(true, true);
         };
+        _tray.FeedbackRequested += (_, _) => _viewModel?.OpenGitHubCommand.Execute(null);
         _tray.ExitRequested += (_, _) => ExitApplication();
         _tray.PointerEntered += (_, _) => ShowPanelWithoutActivation();
         _tray.PointerLeft += (_, _) => { if (!_panelPinned) HidePanel(); };

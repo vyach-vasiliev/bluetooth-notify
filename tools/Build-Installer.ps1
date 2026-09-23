@@ -123,7 +123,7 @@ if (-not $SkipTests) {
 }
 
 & dotnet publish $projectPath -c Release -r win-x64 --self-contained false `
-    --no-build -o $publishDirectory
+    --no-build --no-restore -o $publishDirectory
 if ($LASTEXITCODE -ne 0) { throw 'dotnet publish failed.' }
 
 $requiredFiles = @(

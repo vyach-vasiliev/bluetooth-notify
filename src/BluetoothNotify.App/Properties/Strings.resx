@@ -10,6 +10,7 @@
   <data name="Refresh" xml:space="preserve"><value>Обновить</value></data>
   <data name="Exit" xml:space="preserve"><value>Выход</value></data>
   <data name="Settings" xml:space="preserve"><value>Настройки</value></data>
+  <data name="ReportIssue" xml:space="preserve"><value>Сообщить об ошибке / отзыв</value></data>
   <data name="SettingsDescription" xml:space="preserve"><value>Язык, оформление, автозапуск и уведомления</value></data>
   <data name="Language" xml:space="preserve"><value>Язык</value></data>
   <data name="Theme" xml:space="preserve"><value>Тема</value></data>
@@ -32,7 +33,7 @@
   <data name="Notifications" xml:space="preserve"><value>Уведомления выключены</value></data>
   <data name="NotificationsEnabled" xml:space="preserve"><value>Уведомления включены</value></data>
   <data name="Updated" xml:space="preserve"><value>Обновлено {0:HH:mm:ss}</value></data>
-  <data name="DevicesWithBattery" xml:space="preserve"><value>Передают заряд: {0}</value></data>
+  <data name="DevicesWithBattery" xml:space="preserve"><value>Передают заряд: {0} из {1}</value></data>
   <data name="DeviceFallbackName" xml:space="preserve"><value>Bluetooth-устройство</value></data>
   <data name="Connected" xml:space="preserve"><value>Подключено</value></data>
   <data name="Disconnected" xml:space="preserve"><value>Не подключено</value></data>

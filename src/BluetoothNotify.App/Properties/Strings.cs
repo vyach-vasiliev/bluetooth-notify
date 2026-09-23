@@ -17,6 +17,7 @@ public static class Strings
     public static string Refresh => Get(nameof(Refresh));
     public static string Exit => Get(nameof(Exit));
     public static string Settings => Get(nameof(Settings));
+    public static string ReportIssue => Get(nameof(ReportIssue));
     public static string SettingsDescription => Get(nameof(SettingsDescription));
     public static string Language => Get(nameof(Language));
     public static string Theme => Get(nameof(Theme));

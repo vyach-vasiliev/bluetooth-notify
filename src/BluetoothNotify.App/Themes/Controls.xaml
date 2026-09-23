@@ -69,10 +69,13 @@
                     <Grid Background="Transparent">
                         <Border x:Name="ThumbChrome" Width="5" Margin="0,2"
                                 Background="{DynamicResource Text.Secondary}"
-                                CornerRadius="2.5" Opacity="0.46"
+                                CornerRadius="2.5" Opacity="0"
                                 HorizontalAlignment="Center" />
                     </Grid>
                     <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Value="True">
+                            <Setter TargetName="ThumbChrome" Property="Opacity" Value="0.46" />
+                        </DataTrigger>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="ThumbChrome" Property="Width" Value="7" />
                             <Setter TargetName="ThumbChrome" Property="CornerRadius" Value="3.5" />
@@ -131,6 +134,9 @@
                         </Track>
                     </Grid>
                     <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Value="True">
+                            <Setter TargetName="TrackChrome" Property="Opacity" Value="0.58" />
+                        </DataTrigger>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="TrackChrome" Property="Opacity" Value="0.58" />
                         </Trigger>

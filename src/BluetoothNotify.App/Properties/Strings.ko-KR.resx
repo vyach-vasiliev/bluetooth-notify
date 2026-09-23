@@ -10,6 +10,7 @@
   <data name="Refresh" xml:space="preserve"><value>새로 고침</value></data>
   <data name="Exit" xml:space="preserve"><value>종료</value></data>
   <data name="Settings" xml:space="preserve"><value>설정</value></data>
+  <data name="ReportIssue" xml:space="preserve"><value>문제 신고 / 피드백</value></data>
   <data name="SettingsDescription" xml:space="preserve"><value>언어, 모양, 시작 및 알림</value></data>
   <data name="Language" xml:space="preserve"><value>언어</value></data>
   <data name="Theme" xml:space="preserve"><value>테마</value></data>
@@ -32,7 +33,7 @@
   <data name="Notifications" xml:space="preserve"><value>알림 꺼짐</value></data>
   <data name="NotificationsEnabled" xml:space="preserve"><value>알림 켜짐</value></data>
   <data name="Updated" xml:space="preserve"><value>업데이트: {0:HH:mm:ss}</value></data>
-  <data name="DevicesWithBattery" xml:space="preserve"><value>배터리 표시 기기: {0}</value></data>
+  <data name="DevicesWithBattery" xml:space="preserve"><value>배터리 표시 기기: {0}/{1}</value></data>
   <data name="DeviceFallbackName" xml:space="preserve"><value>Bluetooth 기기</value></data>
   <data name="Connected" xml:space="preserve"><value>연결됨</value></data>
   <data name="Disconnected" xml:space="preserve"><value>연결 안 됨</value></data>

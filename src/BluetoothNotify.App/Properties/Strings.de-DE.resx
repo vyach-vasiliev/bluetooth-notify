@@ -10,6 +10,7 @@
   <data name="Refresh" xml:space="preserve"><value>Aktualisieren</value></data>
   <data name="Exit" xml:space="preserve"><value>Beenden</value></data>
   <data name="Settings" xml:space="preserve"><value>Einstellungen</value></data>
+  <data name="ReportIssue" xml:space="preserve"><value>Problem melden / Feedback</value></data>
   <data name="SettingsDescription" xml:space="preserve"><value>Sprache, Darstellung, Autostart und Benachrichtigungen</value></data>
   <data name="Language" xml:space="preserve"><value>Sprache</value></data>
   <data name="Theme" xml:space="preserve"><value>Design</value></data>
@@ -32,7 +33,7 @@
   <data name="Notifications" xml:space="preserve"><value>Benachrichtigungen aus</value></data>
   <data name="NotificationsEnabled" xml:space="preserve"><value>Benachrichtigungen an</value></data>
   <data name="Updated" xml:space="preserve"><value>Aktualisiert um {0:HH:mm:ss}</value></data>
-  <data name="DevicesWithBattery" xml:space="preserve"><value>Akkustand verfügbar: {0}</value></data>
+  <data name="DevicesWithBattery" xml:space="preserve"><value>Akkustand verfügbar: {0} von {1}</value></data>
   <data name="DeviceFallbackName" xml:space="preserve"><value>Bluetooth-Gerät</value></data>
   <data name="Connected" xml:space="preserve"><value>Verbunden</value></data>
   <data name="Disconnected" xml:space="preserve"><value>Nicht verbunden</value></data>

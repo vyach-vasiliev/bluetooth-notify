@@ -10,6 +10,7 @@
   <data name="Refresh" xml:space="preserve"><value>Actualizar</value></data>
   <data name="Exit" xml:space="preserve"><value>Salir</value></data>
   <data name="Settings" xml:space="preserve"><value>Configuración</value></data>
+  <data name="ReportIssue" xml:space="preserve"><value>Informar de un problema / comentarios</value></data>
   <data name="SettingsDescription" xml:space="preserve"><value>Idioma, apariencia, inicio y notificaciones</value></data>
   <data name="Language" xml:space="preserve"><value>Idioma</value></data>
   <data name="Theme" xml:space="preserve"><value>Tema</value></data>
@@ -32,7 +33,7 @@
   <data name="Notifications" xml:space="preserve"><value>Notificaciones desactivadas</value></data>
   <data name="NotificationsEnabled" xml:space="preserve"><value>Notificaciones activadas</value></data>
   <data name="Updated" xml:space="preserve"><value>Actualizado a las {0:HH:mm:ss}</value></data>
-  <data name="DevicesWithBattery" xml:space="preserve"><value>Con batería disponible: {0}</value></data>
+  <data name="DevicesWithBattery" xml:space="preserve"><value>Con batería disponible: {0} de {1}</value></data>
   <data name="DeviceFallbackName" xml:space="preserve"><value>Dispositivo Bluetooth</value></data>
   <data name="Connected" xml:space="preserve"><value>Conectado</value></data>
   <data name="Disconnected" xml:space="preserve"><value>No conectado</value></data>

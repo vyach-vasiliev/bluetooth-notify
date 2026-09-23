@@ -112,7 +112,7 @@ public sealed class TrayPanelViewModel : ObservableObject
     }
     public string NotificationsText => NotificationsEnabled ? Properties.Strings.NotificationsEnabled : Properties.Strings.Notifications;
     public string NotificationsIconGlyph => GetNotificationsIconGlyph(NotificationsEnabled);
-    public string BatterySummary => string.Format(Properties.Strings.DevicesWithBattery, CountConnectedBatteryDevices(Devices));
+    public string BatterySummary => string.Format(Properties.Strings.DevicesWithBattery, CountConnectedBatteryDevices(Devices), Devices.Count);
     public string UpdatedText => _updatedAt is { } at ? string.Format(Properties.Strings.Updated, at) : Properties.Strings.Loading;
 
     public static string GetNotificationsIconGlyph(bool enabled) => enabled ? "\uF2A3" : "\uF285";
