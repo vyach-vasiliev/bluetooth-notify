@@ -31,6 +31,29 @@ jobs:
           }
           "version=$version" >> $env:GITHUB_OUTPUT
 
+      - name: Install Windows App Runtime
+        shell: pwsh
+        run: |
+          [xml]$packages = Get-Content -Raw Directory.Packages.props
+          $sdkVersion = [string](
+            $packages.Project.ItemGroup.PackageVersion |
+              Where-Object { $_.Include -eq 'Microsoft.WindowsAppSDK' }
+          ).Version
+          if ([string]::IsNullOrWhiteSpace($sdkVersion)) {
+            throw 'Could not read the Microsoft.WindowsAppSDK version from Directory.Packages.props.'
+          }
+          $installerPath = Join-Path $env:TEMP 'windowsappruntimeinstall-x64.exe'
+          $installerUrl = "https://aka.ms/windowsappsdk/1.8/$sdkVersion/windowsappruntimeinstall-x64.exe"
+          Invoke-WebRequest -Uri $installerUrl -OutFile $installerPath
+          $signature = Get-AuthenticodeSignature -LiteralPath $installerPath
+          if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch 'Microsoft Corporation') {
+            throw 'The Windows App Runtime installer signature is invalid or unexpected.'
+          }
+          $process = Start-Process -FilePath $installerPath -ArgumentList '--quiet' -Wait -PassThru
+          if ($process.ExitCode -ne 0) {
+            throw "Windows App Runtime installation failed with exit code $($process.ExitCode)."
+          }
+
       - name: Install Inno Setup 6.7.3
         shell: pwsh
         run: |
@@ -54,7 +77,11 @@ jobs:
 
       - name: Build, test, publish, and compile installer
         shell: pwsh
-        run: ./tools/Build-Installer.ps1 -InnoSetupCompiler "$env:INNO_SETUP_COMPILER"
+        run: ./tools/Build-Installer.ps1 -SkipTests -InnoSetupCompiler "$env:INNO_SETUP_COMPILER"
+
+      - name: Run tests
+        shell: pwsh
+        run: dotnet test BluetoothNotify.slnx -c Release --no-build
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v3
