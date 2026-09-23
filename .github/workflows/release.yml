@@ -1,0 +1,67 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Validate release tag
+        id: version
+        shell: pwsh
+        run: |
+          [xml]$props = Get-Content -Raw Directory.Build.props
+          $version = [string]$props.Project.PropertyGroup.Version
+          if ($env:GITHUB_REF_NAME -ne "v$version") {
+            throw "Tag $($env:GITHUB_REF_NAME) must match version v$version from Directory.Build.props."
+          }
+          "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Install Inno Setup 6.7.3
+        shell: pwsh
+        run: |
+          $installerPath = Join-Path $env:TEMP 'innosetup-6.7.3.exe'
+          $installRoot = Join-Path $env:LOCALAPPDATA 'Programs\Inno Setup 6'
+          Invoke-WebRequest -Uri 'https://github.com/jrsoftware/issrc/releases/download/is-6_7_3/innosetup-6.7.3.exe' -OutFile $installerPath
+          $signature = Get-AuthenticodeSignature -LiteralPath $installerPath
+          if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch 'Pyrsys') {
+            throw 'The Inno Setup installer signature is invalid or unexpected.'
+          }
+          $arguments = @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/SP-', '/CURRENTUSER', "/DIR=`"$installRoot`"")
+          $process = Start-Process -FilePath $installerPath -ArgumentList $arguments -Wait -PassThru
+          if ($process.ExitCode -ne 0) {
+            throw "Inno Setup installation failed with exit code $($process.ExitCode)."
+          }
+          $compiler = Join-Path $installRoot 'ISCC.exe'
+          if (-not (Test-Path -LiteralPath $compiler)) {
+            throw "Inno Setup compiler was not found at $compiler."
+          }
+          "INNO_SETUP_COMPILER=$compiler" >> $env:GITHUB_ENV
+
+      - name: Build, test, publish, and compile installer
+        shell: pwsh
+        run: ./tools/Build-Installer.ps1 -InnoSetupCompiler "$env:INNO_SETUP_COMPILER"
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Bluetooth Notify ${{ steps.version.outputs.version }}
+          generate_release_notes: true
+          files: artifacts/installer/BluetoothNotify-Setup-${{ steps.version.outputs.version }}-x64.exe

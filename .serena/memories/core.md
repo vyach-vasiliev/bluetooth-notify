@@ -1,0 +1,3 @@
+# Project map
+
+Bluetooth Notify is a Windows desktop app for showing Bluetooth device battery status, with a small static project website. Main app: `src/BluetoothNotify.App` (Views, ViewModels, Services, Themes, Controls). Tests: `tests/BluetoothNotify.Tests`. Website: `site`. Installer: `installer/BluetoothNotify.iss`; release build script: `tools/Build-Installer.ps1`. Product version is centralized in `Directory.Build.props`. See `mem:tech_stack`, `mem:suggested_commands`, `mem:conventions`, and `mem:task_completion` for the stack and working practices.
