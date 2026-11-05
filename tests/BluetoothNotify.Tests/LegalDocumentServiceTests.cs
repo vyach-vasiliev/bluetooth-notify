@@ -19,9 +19,24 @@ public sealed class LegalDocumentServiceTests
 
         Assert.Equal("https", uri.Scheme);
         Assert.Equal("bluetooth-notify.onrender.com", uri.Host);
-        Assert.Equal("/legal/", uri.AbsolutePath);
+        Assert.Equal("/legal/index.html", uri.AbsolutePath);
         Assert.Equal($"?lang={expectedLanguage}", uri.Query);
         Assert.Equal("#privacy", uri.Fragment);
+    }
+
+    [Theory]
+    [InlineData("privacy")]
+    [InlineData("terms")]
+    [InlineData("disclaimer")]
+    public void BuildDocumentUri_PointsToPublishedDocumentSection(string section)
+    {
+        var uri = LegalDocumentService.BuildDocumentUri(
+            section,
+            CultureInfo.GetCultureInfo("ru-RU"));
+
+        Assert.Equal(
+            $"https://bluetooth-notify.onrender.com/legal/index.html?lang=ru#{section}",
+            uri.AbsoluteUri);
     }
 
     [Fact]

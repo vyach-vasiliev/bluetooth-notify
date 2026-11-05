@@ -1,9 +1,9 @@
 <Project>
   <PropertyGroup>
-    <Version>1.1.2</Version>
-    <Company>vyach-vasiliev</Company>
-    <Authors>vyach-vasiliev</Authors>
-    <Copyright>Copyright © 2026 vyach-vasiliev</Copyright>
+    <Version>1.2.0</Version>
+    <Company>Vasilev Viacheslav</Company>
+    <Authors>Vasilev Viacheslav</Authors>
+    <Copyright>Copyright © 2026 Vasilev Viacheslav</Copyright>
     <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/vyach-vasiliev/bluetooth-notify</RepositoryUrl>
     <LangVersion>latest</LangVersion>

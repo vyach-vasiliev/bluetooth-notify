@@ -6,3 +6,10 @@ services:
     buildCommand: npm ci && npm run build
     staticPublishPath: dist
     autoDeployTrigger: commit
+    routes:
+      - type: redirect
+        source: /legal
+        destination: /legal/index.html
+      - type: rewrite
+        source: /legal/
+        destination: /legal/index.html

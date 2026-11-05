@@ -524,7 +524,7 @@ async function copyCommand() {
           <a :href="`/legal/index.html?lang=${locale}#privacy`">{{ copy.footer.privacy }}</a>
           <a :href="`/legal/index.html?lang=${locale}#terms`">{{ copy.footer.terms }}</a>
           <a :href="`/legal/index.html?lang=${locale}#disclaimer`">{{ copy.footer.disclaimer }}</a>
-          <a href="/legal/LICENSE.md">{{ copy.footer.license }}</a>
+          <a href="https://github.com/vyach-vasiliev/bluetooth-notify/blob/main/LICENSE.md">{{ copy.footer.license }}</a>
         </nav>
         <p class="font-semibold text-slate-600">{{ copy.footer.tagline }}</p>
       </div>

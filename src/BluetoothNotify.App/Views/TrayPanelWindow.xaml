@@ -282,9 +282,13 @@
                                 <Button Style="{StaticResource SettingsFooterLink}" Command="{Binding OpenDisclaimerCommand}"
                                         Content="{x:Static p:Strings.Disclaimer}" AutomationProperties.Name="{x:Static p:Strings.Disclaimer}" />
                             </StackPanel>
-                            <Button Grid.Column="1" Style="{StaticResource SettingsFooterLink}" Command="{Binding OpenGitHubCommand}"
-                                    Content="© 2026 · GitHub" AutomationProperties.Name="© 2026 · GitHub"
-                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            <StackPanel Grid.Column="1" Margin="12,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <TextBlock Text="© 2026&#x0a;Vasilev Viacheslav" TextAlignment="Right" LineHeight="18"
+                                           FontSize="12" Foreground="{DynamicResource Text.Secondary}" />
+                                <Button Style="{StaticResource SettingsFooterLink}" Command="{Binding OpenGitHubCommand}"
+                                        Content="GitHub" AutomationProperties.Name="Vasilev Viacheslav · GitHub"
+                                        HorizontalAlignment="Right" />
+                            </StackPanel>
                         </Grid>
                     </StackPanel>
                 </StackPanel>

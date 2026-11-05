@@ -6,7 +6,7 @@ namespace BluetoothNotify.App.Services;
 public static class LegalDocumentService
 {
     public static Uri PublishedLegalPageUri { get; } =
-        new("https://bluetooth-notify.onrender.com/legal/");
+        new("https://bluetooth-notify.onrender.com/legal/index.html");
 
     public static Uri ProjectRepositoryUri { get; } =
         new("https://github.com/vyach-vasiliev/bluetooth-notify/");
