@@ -74,4 +74,15 @@ public static class Strings
     public static string TermsOfUse => Get(nameof(TermsOfUse));
     public static string Disclaimer => Get(nameof(Disclaimer));
     public static string LegalDocumentOpenError => Get(nameof(LegalDocumentOpenError));
+    public static string Updates => Get(nameof(Updates));
+    public static string CurrentVersion => Get(nameof(CurrentVersion));
+    public static string CheckUpdatesAtStartup => Get(nameof(CheckUpdatesAtStartup));
+    public static string UpdateCheckDescription => Get(nameof(UpdateCheckDescription));
+    public static string CheckForUpdates => Get(nameof(CheckForUpdates));
+    public static string CheckingForUpdates => Get(nameof(CheckingForUpdates));
+    public static string AppUpToDate => Get(nameof(AppUpToDate));
+    public static string UpdateCheckFailed => Get(nameof(UpdateCheckFailed));
+    public static string UpdateAvailable => Get(nameof(UpdateAvailable));
+    public static string DownloadUpdate => Get(nameof(DownloadUpdate));
+    public static string UpdateDownloadOpenFailed => Get(nameof(UpdateDownloadOpenFailed));
 }

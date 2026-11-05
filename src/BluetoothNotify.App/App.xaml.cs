@@ -91,6 +91,8 @@ public partial class App : Application
             _viewModel.BatteryStatusChanged += (_, args) => _tray?.SetBatteryStatus(args.MinimumBatteryPercent);
             _viewModel.DevicesRefreshed += OnDevicesRefreshed;
             _window = CreatePanelWindow();
+            if (_viewModel.CheckUpdatesAtStartup)
+                _ = _viewModel.Updates.CheckAsync(_lifetime.Token);
 
             _monitor.ConnectionChanged += OnConnectionChanged;
             _monitor.DevicesInvalidated += OnDevicesInvalidated;

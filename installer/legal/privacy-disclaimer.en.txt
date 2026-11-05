@@ -1,13 +1,14 @@
 BLUETOOTH NOTIFY — PRIVACY NOTICE AND DISCLAIMER
-Effective and last updated: 11 September 2026 · Version 1.2
+Effective and last updated: 6 November 2026 · Version 1.3
 
 LOCAL-FIRST PRIVACY SUMMARY
 • The app reads paired-device name, Windows endpoint/container identifiers, available Bluetooth address, device category, connection state, and battery level. It uses these details in memory and does not persist or upload them.
+• At startup (enabled by default) and on manual request, the app checks public release information at api.github.com / github.com/vyach-vasiliev/bluetooth-notify/releases/latest/download/update.json. GitHub receives the connection IP address and a User-Agent with the app version; no Bluetooth-device data, settings, logs, account identifiers, or tokens are sent. Disable startup checks in Settings. Download update opens the official GitHub installer link in the browser; downloading and installation require user action. GitHub privacy: https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement.
 • Settings are stored in %LocalAppData%\BluetoothNotify\settings.json.
 • Rotating local technical logs store timestamps, app events, error types, and error messages (up to five files of about 512 KiB). Device names/addresses are not intentionally logged, but operating-system error text could contain local technical details.
 • The installer checks Microsoft prerequisites locally and may create a local setup log. It opens Microsoft pages only after permission and sends no installation data to the publisher.
 • The static website at https://bluetooth-notify.onrender.com/ sets no cookies and uses no analytics, advertising, accounts, forms, pixels, fingerprinting, or telemetry. It is hosted as a Render static site. Render may process device/IP and infrastructure data under https://render.com/privacy; Render states that static sites do not emit application request logs.
-• The unmodified app does not sell, share, rent, upload, profile, or make legally significant automated decisions with personal data. In-memory data disappears on exit. Settings and logs remain until the user deletes them or selects removal during uninstall.
+• The unmodified app does not sell, share, rent, upload, profile, or make legally significant automated decisions with Bluetooth-device data, settings, or local logs. In-memory data disappears on exit. Settings and logs remain until the user deletes them or selects removal during uninstall.
 
 PUBLISHER AND CONTACT
 Bluetooth Notify is published by the developer operating the GitHub account “vyach-vasiliev”. Source: https://github.com/vyach-vasiliev/bluetooth-notify/. Privacy, legal, and support requests: https://github.com/vyach-vasiliev/.

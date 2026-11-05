@@ -67,4 +67,15 @@
   <data name="TermsOfUse" xml:space="preserve"><value>Conditions d’utilisation</value></data>
   <data name="Disclaimer" xml:space="preserve"><value>Clause de non-responsabilité</value></data>
   <data name="LegalDocumentOpenError" xml:space="preserve"><value>Impossible d’ouvrir les informations juridiques</value></data>
+  <data name="Updates" xml:space="preserve"><value>Mises à jour</value></data>
+  <data name="CurrentVersion" xml:space="preserve"><value>Version {0}</value></data>
+  <data name="CheckUpdatesAtStartup" xml:space="preserve"><value>Vérifier au démarrage</value></data>
+  <data name="UpdateCheckDescription" xml:space="preserve"><value>Les informations de version proviennent de GitHub. Aucune donnée des appareils n’est envoyée.</value></data>
+  <data name="CheckForUpdates" xml:space="preserve"><value>Rechercher des mises à jour</value></data>
+  <data name="CheckingForUpdates" xml:space="preserve"><value>Recherche de mises à jour…</value></data>
+  <data name="AppUpToDate" xml:space="preserve"><value>Votre application est à jour.</value></data>
+  <data name="UpdateCheckFailed" xml:space="preserve"><value>Impossible de rechercher les mises à jour. Vérifiez votre connexion et réessayez.</value></data>
+  <data name="UpdateAvailable" xml:space="preserve"><value>La version {0} est disponible</value></data>
+  <data name="DownloadUpdate" xml:space="preserve"><value>Télécharger la mise à jour</value></data>
+  <data name="UpdateDownloadOpenFailed" xml:space="preserve"><value>Impossible d’ouvrir le lien du programme d’installation.</value></data>
 </root>

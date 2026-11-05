@@ -67,4 +67,15 @@
   <data name="TermsOfUse" xml:space="preserve"><value>Условия использования</value></data>
   <data name="Disclaimer" xml:space="preserve"><value>Отказ от ответственности</value></data>
   <data name="LegalDocumentOpenError" xml:space="preserve"><value>Не удалось открыть правовую информацию</value></data>
+  <data name="Updates" xml:space="preserve"><value>Обновления</value></data>
+  <data name="CurrentVersion" xml:space="preserve"><value>Версия {0}</value></data>
+  <data name="CheckUpdatesAtStartup" xml:space="preserve"><value>Проверять при запуске</value></data>
+  <data name="UpdateCheckDescription" xml:space="preserve"><value>Сведения о версиях загружаются с GitHub. Данные устройств не отправляются.</value></data>
+  <data name="CheckForUpdates" xml:space="preserve"><value>Проверить обновления</value></data>
+  <data name="CheckingForUpdates" xml:space="preserve"><value>Проверяем обновления…</value></data>
+  <data name="AppUpToDate" xml:space="preserve"><value>Установлена последняя версия.</value></data>
+  <data name="UpdateCheckFailed" xml:space="preserve"><value>Не удалось проверить обновления. Проверьте соединение и повторите попытку.</value></data>
+  <data name="UpdateAvailable" xml:space="preserve"><value>Доступна версия {0}</value></data>
+  <data name="DownloadUpdate" xml:space="preserve"><value>Скачать обновление</value></data>
+  <data name="UpdateDownloadOpenFailed" xml:space="preserve"><value>Не удалось открыть ссылку на установщик.</value></data>
 </root>

@@ -164,6 +164,21 @@ if (-not $installer) {
 }
 
 $hash = Get-FileHash -LiteralPath $installer.FullName -Algorithm SHA256
+$manifestPath = Join-Path $installerDirectory 'update.json'
+$manifest = @{
+    tag_name = "v$appVersion"
+    draft = $false
+    prerelease = $false
+    sha256 = $hash.Hash.ToLowerInvariant()
+    assets = @(@{
+        name = $installer.Name
+        state = 'uploaded'
+        size = $installer.Length
+        browser_download_url = "https://github.com/vyach-vasiliev/bluetooth-notify/releases/download/v$appVersion/$($installer.Name)"
+    })
+} | ConvertTo-Json -Depth 4
+[System.IO.File]::WriteAllText($manifestPath, $manifest, [System.Text.UTF8Encoding]::new($false))
 Write-Host "Installer: $($installer.FullName)"
+Write-Host "Manifest:  $manifestPath"
 Write-Host "Version:   $appVersion"
 Write-Host "SHA-256:   $($hash.Hash)"

@@ -97,6 +97,12 @@ The app starts in the system tray; it does not open a regular window.
 
 The panel shows up to two device cards at once; scroll to reach the rest. A disconnected device may retain its last known battery value. The app marks that value as stale and does not count it as a current battery report.
 
+## Updates
+
+Starting with version 1.3.0, the app checks the latest published stable GitHub Release at startup and from **Settings → Updates → Check for updates**. Startup checks can be disabled. A newer release is offered only when its Windows x64 installer is ready; **Download update** opens the official installer link in your browser. The app does not install updates automatically.
+
+Checks send a public GitHub API request with the app version in the User-Agent. If the anonymous API quota is exhausted, the app reads `releases/latest/download/update.json` from the official repository instead. GitHub receives the connection IP address; Bluetooth-device data, settings, logs, account identifiers, and tokens are not sent. The installer build creates `artifacts/installer/update.json`; publish it together with the installer in every release.
+
 ## Settings and local data
 
 - Settings: <code>%LocalAppData%\BluetoothNotify\settings.json</code>

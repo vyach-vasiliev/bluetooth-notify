@@ -48,6 +48,7 @@ public sealed class TrayPanelViewModel : ObservableObject
     private string? _warning;
     private DateTimeOffset? _updatedAt;
     private bool _notificationsEnabled = true;
+    private bool _checkUpdatesAtStartup = true;
     private bool _isSettingsOpen;
     private AppLanguagePreference _languagePreference;
     private AppThemePreference _themePreference;
@@ -81,6 +82,7 @@ public sealed class TrayPanelViewModel : ObservableObject
     }
 
     public ObservableCollection<BluetoothDeviceViewModel> Devices { get; } = [];
+    public UpdateViewModel Updates { get; } = new(new GitHubUpdateService());
     public AsyncCommand RefreshCommand { get; }
     public AsyncCommand ToggleNotificationsCommand { get; }
     public event EventHandler? ExitRequested;
@@ -129,6 +131,15 @@ public sealed class TrayPanelViewModel : ObservableObject
     }
 
     public bool IsSettingsOpen { get => _isSettingsOpen; private set => SetProperty(ref _isSettingsOpen, value); }
+    public bool CheckUpdatesAtStartup
+    {
+        get => _checkUpdatesAtStartup;
+        set
+        {
+            if (!SetProperty(ref _checkUpdatesAtStartup, value)) return;
+            _ = PersistSettingsAsync(false);
+        }
+    }
     public AppLanguagePreference LanguagePreference
     {
         get => _languagePreference;
@@ -243,6 +254,7 @@ public sealed class TrayPanelViewModel : ObservableObject
     public void Initialize(AppSettings settings)
     {
         _notificationsEnabled = settings.NotificationsEnabled;
+        _checkUpdatesAtStartup = settings.CheckUpdatesAtStartup;
         _languagePreference = settings.Language;
         _themePreference = settings.Theme;
         try
@@ -259,6 +271,7 @@ public sealed class TrayPanelViewModel : ObservableObject
         _lowBatteryNotificationEnabled = settings.LowBatteryNotificationEnabled;
         _lowBatteryThresholdPercent = settings.LowBatteryThresholdPercent;
         OnPropertyChanged(nameof(NotificationsEnabled));
+        OnPropertyChanged(nameof(CheckUpdatesAtStartup));
         OnPropertyChanged(nameof(NotificationsText));
         OnPropertyChanged(nameof(NotificationsIconGlyph));
         OnPropertyChanged(nameof(LanguagePreference));
@@ -355,6 +368,7 @@ public sealed class TrayPanelViewModel : ObservableObject
             var settings = await _dispatcher.InvokeAsync(() => new AppSettings
             {
                 NotificationsEnabled = NotificationsEnabled,
+                CheckUpdatesAtStartup = CheckUpdatesAtStartup,
                 Language = LanguagePreference,
                 Theme = ThemePreference,
                 MediumBatteryNotificationEnabled = MediumBatteryNotificationEnabled,

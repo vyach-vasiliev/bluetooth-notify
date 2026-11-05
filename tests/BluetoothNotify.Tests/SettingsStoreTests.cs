@@ -14,6 +14,7 @@ public sealed class SettingsStoreTests : IDisposable
         await store.SaveAsync(new AppSettings
         {
             NotificationsEnabled = false,
+            CheckUpdatesAtStartup = false,
             Language = AppLanguagePreference.EnglishUnitedStates,
             Theme = AppThemePreference.Light,
             MediumBatteryNotificationEnabled = false,
@@ -23,6 +24,7 @@ public sealed class SettingsStoreTests : IDisposable
         });
         var result = await store.LoadAsync();
         Assert.False(result.NotificationsEnabled);
+        Assert.False(result.CheckUpdatesAtStartup);
         Assert.Equal(AppLanguagePreference.EnglishUnitedStates, result.Language);
         Assert.Equal(AppThemePreference.Light, result.Theme);
         Assert.False(result.MediumBatteryNotificationEnabled);
@@ -52,6 +54,7 @@ public sealed class SettingsStoreTests : IDisposable
         Assert.Equal(AppLanguagePreference.System, result.Language);
         Assert.Equal(AppThemePreference.System, result.Theme);
         Assert.True(result.MediumBatteryNotificationEnabled);
+        Assert.True(result.CheckUpdatesAtStartup);
         Assert.Equal(30, result.MediumBatteryThresholdPercent);
         Assert.True(result.LowBatteryNotificationEnabled);
         Assert.Equal(15, result.LowBatteryThresholdPercent);

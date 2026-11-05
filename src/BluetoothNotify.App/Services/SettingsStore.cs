@@ -47,6 +47,7 @@ public sealed class SettingsStore(string? baseDirectory = null) : ISettingsStore
     private static AppSettings Migrate(AppSettings? value) => new()
     {
         NotificationsEnabled = value?.NotificationsEnabled ?? true,
+        CheckUpdatesAtStartup = value?.CheckUpdatesAtStartup ?? true,
         Language = Enum.IsDefined(value?.Language ?? AppLanguagePreference.System)
             ? value?.Language ?? AppLanguagePreference.System
             : AppLanguagePreference.System,

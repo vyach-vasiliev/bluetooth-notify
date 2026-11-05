@@ -91,4 +91,6 @@ jobs:
           tag_name: ${{ github.ref_name }}
           name: Bluetooth Notify ${{ steps.version.outputs.version }}
           generate_release_notes: true
-          files: artifacts/installer/BluetoothNotify-Setup-${{ steps.version.outputs.version }}-x64.exe
+          files: |
+            artifacts/installer/BluetoothNotify-Setup-${{ steps.version.outputs.version }}-x64.exe
+            artifacts/installer/update.json

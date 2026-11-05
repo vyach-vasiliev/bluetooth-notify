@@ -67,4 +67,15 @@
   <data name="TermsOfUse" xml:space="preserve"><value>Nutzungsbedingungen</value></data>
   <data name="Disclaimer" xml:space="preserve"><value>Haftungsausschluss</value></data>
   <data name="LegalDocumentOpenError" xml:space="preserve"><value>Die rechtlichen Hinweise konnten nicht geöffnet werden</value></data>
+  <data name="Updates" xml:space="preserve"><value>Updates</value></data>
+  <data name="CurrentVersion" xml:space="preserve"><value>Version {0}</value></data>
+  <data name="CheckUpdatesAtStartup" xml:space="preserve"><value>Beim Start prüfen</value></data>
+  <data name="UpdateCheckDescription" xml:space="preserve"><value>Versionsinformationen werden von GitHub geladen. Gerätedaten werden nicht gesendet.</value></data>
+  <data name="CheckForUpdates" xml:space="preserve"><value>Nach Updates suchen</value></data>
+  <data name="CheckingForUpdates" xml:space="preserve"><value>Updates werden gesucht…</value></data>
+  <data name="AppUpToDate" xml:space="preserve"><value>Die neueste Version ist installiert.</value></data>
+  <data name="UpdateCheckFailed" xml:space="preserve"><value>Updates konnten nicht geprüft werden. Prüfen Sie die Verbindung und versuchen Sie es erneut.</value></data>
+  <data name="UpdateAvailable" xml:space="preserve"><value>Version {0} ist verfügbar</value></data>
+  <data name="DownloadUpdate" xml:space="preserve"><value>Update herunterladen</value></data>
+  <data name="UpdateDownloadOpenFailed" xml:space="preserve"><value>Der Link zum Installationsprogramm konnte nicht geöffnet werden.</value></data>
 </root>

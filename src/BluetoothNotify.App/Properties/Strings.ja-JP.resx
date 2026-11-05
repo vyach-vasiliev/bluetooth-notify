@@ -67,4 +67,15 @@
   <data name="TermsOfUse" xml:space="preserve"><value>利用規約</value></data>
   <data name="Disclaimer" xml:space="preserve"><value>免責事項</value></data>
   <data name="LegalDocumentOpenError" xml:space="preserve"><value>法的情報を開けませんでした</value></data>
+  <data name="Updates" xml:space="preserve"><value>更新</value></data>
+  <data name="CurrentVersion" xml:space="preserve"><value>バージョン {0}</value></data>
+  <data name="CheckUpdatesAtStartup" xml:space="preserve"><value>起動時に確認</value></data>
+  <data name="UpdateCheckDescription" xml:space="preserve"><value>リリース情報は GitHub から取得します。デバイスのデータは送信しません。</value></data>
+  <data name="CheckForUpdates" xml:space="preserve"><value>更新を確認</value></data>
+  <data name="CheckingForUpdates" xml:space="preserve"><value>更新を確認中…</value></data>
+  <data name="AppUpToDate" xml:space="preserve"><value>最新のバージョンです。</value></data>
+  <data name="UpdateCheckFailed" xml:space="preserve"><value>更新を確認できませんでした。接続を確認して再試行してください。</value></data>
+  <data name="UpdateAvailable" xml:space="preserve"><value>バージョン {0} が利用可能です</value></data>
+  <data name="DownloadUpdate" xml:space="preserve"><value>更新をダウンロード</value></data>
+  <data name="UpdateDownloadOpenFailed" xml:space="preserve"><value>インストーラーのリンクを開けませんでした。</value></data>
 </root>

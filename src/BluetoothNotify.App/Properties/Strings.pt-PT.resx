@@ -67,4 +67,15 @@
   <data name="TermsOfUse" xml:space="preserve"><value>Termos de utilização</value></data>
   <data name="Disclaimer" xml:space="preserve"><value>Isenção de responsabilidade</value></data>
   <data name="LegalDocumentOpenError" xml:space="preserve"><value>Não foi possível abrir a informação jurídica</value></data>
+  <data name="Updates" xml:space="preserve"><value>Atualizações</value></data>
+  <data name="CurrentVersion" xml:space="preserve"><value>Versão {0}</value></data>
+  <data name="CheckUpdatesAtStartup" xml:space="preserve"><value>Verificar ao iniciar</value></data>
+  <data name="UpdateCheckDescription" xml:space="preserve"><value>As informações de versão são obtidas do GitHub. Não são enviados dados dos dispositivos.</value></data>
+  <data name="CheckForUpdates" xml:space="preserve"><value>Procurar atualizações</value></data>
+  <data name="CheckingForUpdates" xml:space="preserve"><value>A procurar atualizações…</value></data>
+  <data name="AppUpToDate" xml:space="preserve"><value>A aplicação está atualizada.</value></data>
+  <data name="UpdateCheckFailed" xml:space="preserve"><value>Não foi possível procurar atualizações. Verifique a ligação e tente novamente.</value></data>
+  <data name="UpdateAvailable" xml:space="preserve"><value>A versão {0} está disponível</value></data>
+  <data name="DownloadUpdate" xml:space="preserve"><value>Transferir atualização</value></data>
+  <data name="UpdateDownloadOpenFailed" xml:space="preserve"><value>Não foi possível abrir a ligação do instalador.</value></data>
 </root>

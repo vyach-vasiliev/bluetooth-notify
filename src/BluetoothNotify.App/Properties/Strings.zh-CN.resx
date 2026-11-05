@@ -67,4 +67,15 @@
   <data name="TermsOfUse" xml:space="preserve"><value>使用条款</value></data>
   <data name="Disclaimer" xml:space="preserve"><value>免责声明</value></data>
   <data name="LegalDocumentOpenError" xml:space="preserve"><value>无法打开法律信息</value></data>
+  <data name="Updates" xml:space="preserve"><value>更新</value></data>
+  <data name="CurrentVersion" xml:space="preserve"><value>版本 {0}</value></data>
+  <data name="CheckUpdatesAtStartup" xml:space="preserve"><value>启动时检查</value></data>
+  <data name="UpdateCheckDescription" xml:space="preserve"><value>从 GitHub 获取版本信息，不发送设备数据。</value></data>
+  <data name="CheckForUpdates" xml:space="preserve"><value>检查更新</value></data>
+  <data name="CheckingForUpdates" xml:space="preserve"><value>正在检查更新…</value></data>
+  <data name="AppUpToDate" xml:space="preserve"><value>已是最新版本。</value></data>
+  <data name="UpdateCheckFailed" xml:space="preserve"><value>无法检查更新，请检查网络连接后重试。</value></data>
+  <data name="UpdateAvailable" xml:space="preserve"><value>版本 {0} 可用</value></data>
+  <data name="DownloadUpdate" xml:space="preserve"><value>下载更新</value></data>
+  <data name="UpdateDownloadOpenFailed" xml:space="preserve"><value>无法打开安装程序链接。</value></data>
 </root>
