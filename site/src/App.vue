@@ -21,6 +21,7 @@ import {
 } from '@lucide/vue'
 import { localeOptions, resolveLocale, translations } from './i18n'
 import { latestRelease } from './release'
+import { serializeSoftwareApplicationSchema, softwareApplicationSchemaId } from './structured-data'
 
 const previewDetails = [
   { id: 'panel', image: '/screenshots/main_light.png' },
@@ -56,6 +57,8 @@ watch(locale, (value) => {
   document.documentElement.lang = selectedLocale.htmlLang
   document.title = copy.value.meta.title
   document.querySelector('meta[name="description"]')?.setAttribute('content', copy.value.meta.description)
+  const schemaScript = document.getElementById(softwareApplicationSchemaId)
+  if (schemaScript) schemaScript.textContent = serializeSoftwareApplicationSchema(value)
 
   const url = new URL(window.location.href)
   url.searchParams.set('lang', value)
