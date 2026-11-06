@@ -26,6 +26,9 @@ public sealed class UpdateViewModel : ObservableObject
     public bool CanDownload => _release is not null;
     public string CurrentVersionText => string.Format(Properties.Strings.CurrentVersion, _service.CurrentVersion);
     public string AvailableVersionText => string.Format(Properties.Strings.UpdateAvailable, _release?.Version);
+    public string HeaderStatusText => CanDownload ? AvailableVersionText
+        : _state == CheckState.UpToDate ? Properties.Strings.AppUpToDate : string.Empty;
+    public bool ShowStatusDetails => _state is not (CheckState.Available or CheckState.UpToDate);
     public string StatusText => _state switch
     {
         CheckState.Checking => Properties.Strings.CheckingForUpdates,
@@ -72,6 +75,8 @@ public sealed class UpdateViewModel : ObservableObject
         _state = state;
         OnPropertyChanged(nameof(CanCheck));
         OnPropertyChanged(nameof(StatusText));
+        OnPropertyChanged(nameof(HeaderStatusText));
+        OnPropertyChanged(nameof(ShowStatusDetails));
         CheckCommand.RaiseCanExecuteChanged();
     }
 

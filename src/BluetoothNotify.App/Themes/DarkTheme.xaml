@@ -18,6 +18,7 @@
     <SolidColorBrush x:Key="Border.Brush" Color="{StaticResource Color.Border}" />
     <SolidColorBrush x:Key="Text.Primary" Color="{StaticResource Color.Text}" />
     <SolidColorBrush x:Key="Text.Secondary" Color="{StaticResource Color.TextSecondary}" />
+    <SolidColorBrush x:Key="Update.AvailableText" Color="#8DB99B" />
     <SolidColorBrush x:Key="Accent.Brush" Color="{StaticResource Color.Accent}" />
     <SolidColorBrush x:Key="Battery.Normal" Color="{StaticResource Color.Success}" />
     <SolidColorBrush x:Key="Battery.Low" Color="{StaticResource Color.Warning}" />
