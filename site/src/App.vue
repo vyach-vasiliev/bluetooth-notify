@@ -10,6 +10,7 @@ import {
   ChevronRight,
   CircleCheck,
   Copy,
+  Download,
   Eye,
   Languages,
   Monitor,
@@ -19,6 +20,7 @@ import {
   Sun,
 } from '@lucide/vue'
 import { localeOptions, resolveLocale, translations } from './i18n'
+import { latestRelease } from './release'
 
 const previewDetails = [
   { id: 'panel', image: '/screenshots/main_light.png' },
@@ -260,10 +262,9 @@ async function copyCommand() {
             </Transition>
           </div>
 
-          <a href="#build" class="header-cta">
-            <span class="hidden sm:inline">{{ copy.header.build }}</span>
-            <span class="sm:hidden">{{ copy.header.buildShort }}</span>
-            <ArrowRight :size="17" :stroke-width="2" aria-hidden="true" />
+          <a :href="latestRelease.downloadUrl" class="header-cta" :aria-label="`${copy.download.label} ${latestRelease.version}`" :title="copy.download.label">
+            <span>{{ copy.download.short }}</span>
+            <Download :size="17" :stroke-width="2" aria-hidden="true" />
           </a>
         </div>
       </div>
@@ -286,13 +287,17 @@ async function copyCommand() {
               {{ copy.hero.description }}
             </p>
 
-            <div class="mt-9 flex flex-col gap-3 sm:flex-row">
-              <a href="#interface" class="action-primary">
+            <div class="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <a :href="latestRelease.downloadUrl" class="action-primary">
+                {{ copy.download.label }}
+                <Download :size="19" :stroke-width="2" aria-hidden="true" />
+              </a>
+              <a href="#interface" class="action-ghost">
                 {{ copy.hero.explore }}
                 <ArrowRight :size="19" :stroke-width="2" aria-hidden="true" />
               </a>
-              <a href="#features" class="action-ghost">{{ copy.hero.why }}</a>
             </div>
+            <p class="mt-4 text-sm font-semibold text-slate-600">v{{ latestRelease.version }} · {{ copy.download.details }}</p>
 
             <div class="hero-meta mt-11">
               <div v-for="(item, index) in copy.hero.meta" :key="item"><span>0{{ index + 1 }}</span>{{ item }}</div>
@@ -496,6 +501,11 @@ async function copyCommand() {
               <p class="mt-6 max-w-xl text-pretty text-lg leading-8 text-blue-100/80">
                 {{ copy.build.description }}
               </p>
+              <a :href="latestRelease.downloadUrl" class="action-primary mt-7">
+                {{ copy.download.label }}
+                <Download :size="19" :stroke-width="2" aria-hidden="true" />
+              </a>
+              <p class="mt-4 text-sm font-semibold text-blue-100/80">v{{ latestRelease.version }} · {{ copy.download.details }}</p>
             </div>
 
             <div class="command-card">

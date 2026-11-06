@@ -19,6 +19,7 @@ export const translations = {
     languageLabel: 'Select language',
     navigationLabel: 'Main navigation',
     nav: { features: 'Features', interface: 'Interface', requirements: 'Requirements' },
+    download: { label: "Download for Windows", short: "Download", details: "Windows 11 · x64 installer" },
     header: { build: 'Build from source', buildShort: 'Build' },
     hero: {
       eyebrow: 'Windows 11 tray utility', title: ['Battery status.', 'Zero guesswork.'],
@@ -67,6 +68,7 @@ export const translations = {
     },
     languageLabel: 'Выбрать язык', navigationLabel: 'Основная навигация',
     nav: { features: 'Возможности', interface: 'Интерфейс', requirements: 'Требования' },
+    download: { label: "Скачать для Windows", short: "Скачать", details: "Windows 11 · установщик x64" },
     header: { build: 'Собрать из исходников', buildShort: 'Сборка' },
     hero: {
       eyebrow: 'Утилита для трея Windows 11', title: ['Заряд устройств.', 'Без догадок.'],
@@ -114,6 +116,7 @@ export const translations = {
     },
     languageLabel: 'Sprache auswählen', navigationLabel: 'Hauptnavigation',
     nav: { features: 'Funktionen', interface: 'Oberfläche', requirements: 'Anforderungen' },
+    download: { label: "Für Windows herunterladen", short: "Herunterladen", details: "Windows 11 · x64-Installer" },
     header: { build: 'Aus Quellcode erstellen', buildShort: 'Erstellen' },
     hero: {
       eyebrow: 'Tray-Dienstprogramm für Windows 11', title: ['Akkustatus.', 'Ohne Rätselraten.'],
@@ -161,6 +164,7 @@ export const translations = {
     },
     languageLabel: '言語を選択', navigationLabel: 'メインナビゲーション',
     nav: { features: '機能', interface: '画面', requirements: '動作要件' },
+    download: { label: "Windows 版をダウンロード", short: "ダウンロード", details: "Windows 11 · x64 インストーラー" },
     header: { build: 'ソースからビルド', buildShort: 'ビルド' },
     hero: {
       eyebrow: 'Windows 11 トレイユーティリティ', title: ['バッテリー状態を、', '迷わず確認。'],
@@ -208,6 +212,7 @@ export const translations = {
     },
     languageLabel: 'Choisir la langue', navigationLabel: 'Navigation principale',
     nav: { features: 'Fonctions', interface: 'Interface', requirements: 'Configuration' },
+    download: { label: "Télécharger pour Windows", short: "Télécharger", details: "Windows 11 · installateur x64" },
     header: { build: 'Compiler depuis les sources', buildShort: 'Compiler' },
     hero: {
       eyebrow: 'Utilitaire pour la zone de notification Windows 11', title: ['État de la batterie.', 'Aucun doute.'],
@@ -255,6 +260,7 @@ export const translations = {
     },
     languageLabel: 'Seleccionar idioma', navigationLabel: 'Navegación principal',
     nav: { features: 'Funciones', interface: 'Interfaz', requirements: 'Requisitos' },
+    download: { label: "Descargar para Windows", short: "Descargar", details: "Windows 11 · instalador x64" },
     header: { build: 'Compilar desde el código', buildShort: 'Compilar' },
     hero: {
       eyebrow: 'Utilidad para la bandeja de Windows 11', title: ['Estado de batería.', 'Sin adivinar.'],
@@ -302,6 +308,7 @@ export const translations = {
     },
     languageLabel: 'Selecionar idioma', navigationLabel: 'Navegação principal',
     nav: { features: 'Funcionalidades', interface: 'Interface', requirements: 'Requisitos' },
+    download: { label: "Transferir para Windows", short: "Transferir", details: "Windows 11 · instalador x64" },
     header: { build: 'Compilar a partir do código', buildShort: 'Compilar' },
     hero: {
       eyebrow: 'Utilitário para a área de notificação do Windows 11', title: ['Estado da bateria.', 'Sem adivinhações.'],
@@ -349,6 +356,7 @@ export const translations = {
     },
     languageLabel: '选择语言', navigationLabel: '主导航',
     nav: { features: '功能', interface: '界面', requirements: '系统要求' },
+    download: { label: "下载 Windows 版", short: "下载", details: "Windows 11 · x64 安装程序" },
     header: { build: '从源代码构建', buildShort: '构建' },
     hero: {
       eyebrow: 'Windows 11 托盘工具', title: ['电量状态，', '一目了然。'],
@@ -396,6 +404,7 @@ export const translations = {
     },
     languageLabel: '언어 선택', navigationLabel: '기본 탐색',
     nav: { features: '기능', interface: '인터페이스', requirements: '요구 사항' },
+    download: { label: "Windows용 다운로드", short: "다운로드", details: "Windows 11 · x64 설치 프로그램" },
     header: { build: '소스에서 빌드', buildShort: '빌드' },
     hero: {
       eyebrow: 'Windows 11 트레이 유틸리티', title: ['배터리 상태.', '추측은 필요 없습니다.'],
