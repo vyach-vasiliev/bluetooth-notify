@@ -136,7 +136,7 @@ a { color: inherit; }
 .language-option:last-child { border-bottom: 0; }
 .language-option:hover, .language-option:focus-visible { background: #e8ecff; outline: 0; }
 .language-option:focus-visible { box-shadow: inset 4px 0 0 var(--coral); }
-.language-option:active { transform: scale(0.96); }
+.language-option:active { background: #dde5ff; }
 .language-option-selected, .language-option-selected:hover, .language-option-selected:focus-visible { background: var(--lime); }
 .language-option-code { color: #667089; font-size: 0.68rem; font-weight: 900; letter-spacing: 0.08em; }
 .language-option-name { font-size: 0.85rem; font-weight: 800; }

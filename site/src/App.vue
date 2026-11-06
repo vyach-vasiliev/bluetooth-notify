@@ -147,10 +147,9 @@ function handleLanguageTriggerKeydown(event) {
   }
 }
 
-function handleLanguageFocusOut() {
-  nextTick(() => {
-    if (!languageSwitcher.value?.contains(document.activeElement)) closeLanguageMenu()
-  })
+function handleLanguageFocusOut(event) {
+  // activeElement can briefly be <body> while focus moves between menu buttons.
+  if (!languageSwitcher.value?.contains(event.relatedTarget)) closeLanguageMenu()
 }
 
 function handleDocumentPointerDown(event) {

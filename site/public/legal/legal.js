@@ -457,10 +457,8 @@ languageMenu.addEventListener("keydown", (event) => {
     closeLanguageMenu(true);
   }
 });
-languageSwitcher.addEventListener("focusout", () => {
-  queueMicrotask(() => {
-    if (!languageSwitcher.contains(document.activeElement)) closeLanguageMenu();
-  });
+languageSwitcher.addEventListener("focusout", (event) => {
+  if (!languageSwitcher.contains(event.relatedTarget)) closeLanguageMenu();
 });
 document.addEventListener("pointerdown", (event) => {
   if (!languageMenu.hidden && !languageSwitcher.contains(event.target)) closeLanguageMenu();
